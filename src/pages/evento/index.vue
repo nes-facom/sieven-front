@@ -35,12 +35,13 @@
         <v-col cols="3"
                class="pr-11">
           <dados-evento class="mt-2"
-                        :categoria="evento.categoria"
                         :hora-fim="evento.horaFim"
                         :hora-inicio="evento.horaInicio"
                         :data-fim="evento.dataFim"
                         :data-inicio="evento.dataInicio"
-                        :local="evento.local">
+                        :local="evento.local"
+                        :tipo = "evento.tipo"
+                        :categoria = "evento.categoria">
           </dados-evento>
         </v-col>
       </v-row>

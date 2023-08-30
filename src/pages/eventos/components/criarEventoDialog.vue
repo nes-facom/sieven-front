@@ -57,11 +57,23 @@
                       v-model="evento.descricao"
                       auto-grow
                       outlined>
-          </v-textarea>
-          <v-text-field label="Modalidade"
-                        v-model="evento.modalidade"
+          </v-textarea> 
+          <v-text-field label="Categoria"
+                        v-model="evento.categoria"
                         outlined>
           </v-text-field>
+          <v-select
+            v-model="evento.tipo"
+            :items="['Conferencia',
+                    'Seminario',
+                    'Congresso',
+                    'Workshop',
+                    'Palestra',
+                    'Cultura',
+                    'Esportivo']"
+            label ="Tipo"
+            outlined
+          ></v-select> 
           <v-file-input label="Imagem"
                         prepend-icon="mdi-camera"
                         accept="image/png"
@@ -96,6 +108,7 @@
 
 <script>
 import axios from 'axios'
+import categoriaResouce from '.../api/resources/categoria.js'
 
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
@@ -107,7 +120,7 @@ export default {
       evento: {
         nome: null,
         descricao: null,
-        modalidade: null,
+        tipo: null,
         local: null,
         dataInicio: null,
         horaInicio: null,
@@ -115,9 +128,11 @@ export default {
         horario_encerramento : null,
         dataFim: null,
         horaFim: null,
+        categoria: categoriaResouce.ListarCategorias,
         imagem: null,
         created_by_user: 1,
-      },            
+      },
+
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
       ]
@@ -134,6 +149,9 @@ export default {
         this.evento.dataFim = valor
       }
     },
+    getEventos() {
+      
+    },
     selecaoHora(campo, valor) {
       if (campo == 'horaInicio') {
         this.evento.horaInicio = valor
@@ -149,12 +167,14 @@ export default {
 
       formData.append('nome', this.evento.nome);
       formData.append('descricao', this.evento.descricao);
-      formData.append('modalidade', this.evento.modalidade);
+      formData.append('categoria', this.evento.categoria);
       formData.append('local', this.evento.local);
       formData.append('created_at', new Date().toISOString());
       formData.append('data_inicial', this.evento.horario_inicio);
       formData.append('situacao', 'Em Aprovação');
-      formData.append('data_final', this.evento.horario_encerramento);      
+      formData.append('data_final', this.evento.horario_encerramento);
+      formData.append('tipo', this.evento.tipo);
+
       formData.append('created_by_user', 1);
       
       axios.post('http://127.0.0.1/eventos/', formData)
