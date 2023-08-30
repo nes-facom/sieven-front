@@ -63,16 +63,12 @@
                         outlined>
           </v-text-field>
           <v-select
-            v-model="evento.tipo"
-            :items="['Conferencia',
-                    'Seminario',
-                    'Congresso',
-                    'Workshop',
-                    'Palestra',
-                    'Cultura',
-                    'Esportivo']"
-            label ="Tipo"
-            outlined
+              v-model="selectedTipo"
+              :items="tipos"
+              item-value="id" 
+              item-text="nome_tipo"
+              label="Tipo"
+              outlined
           ></v-select> 
           <v-file-input label="Imagem"
                         prepend-icon="mdi-camera"
@@ -108,7 +104,7 @@
 
 <script>
 import axios from 'axios'
-import categoriaResouce from '.../api/resources/categoria.js'
+import apiTipo from '../../../api/resources/tipo.js'
 
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
@@ -128,17 +124,28 @@ export default {
         horario_encerramento : null,
         dataFim: null,
         horaFim: null,
-        categoria: categoriaResouce.ListarCategorias,
+        categoria: apiTipo.listarTipos,
         imagem: null,
         created_by_user: 1,
       },
-
+      tipos: [],
+      selectedTipo: null,
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
       ]
     }
   },
+  created() {
+    this.carregaTipos()
+  },
   methods: {
+    carregaTipos() {
+      apiTipo.listarTipos().then(
+        (respostaCategoria) => {
+          this.tipos = respostaCategoria
+        }
+      )
+    },
     fecharCriarEventoDialog() {
       this.$emit("fecharCriarEventoDialog")
     },
