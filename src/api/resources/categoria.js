@@ -6,7 +6,7 @@ const categoriaResource =
     {
         return new Promise( (resolve) =>
         {
-            apiUsuario.get('/categoria').then( (res) =>
+            apiUsuario.get(`/categoria`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>

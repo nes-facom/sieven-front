@@ -58,10 +58,14 @@
                       auto-grow
                       outlined>
           </v-textarea> 
-          <v-text-field label="Categoria"
-                        v-model="evento.categoria"
-                        outlined>
-          </v-text-field>
+          <v-select
+              v-model="selectedCategoria"
+              :items="categorias"
+              item-value="id" 
+              item-text="nome_categoria"
+              label="Categoria"
+              outlined
+          ></v-select> 
           <v-select
               v-model="selectedTipo"
               :items="tipos"
@@ -105,6 +109,7 @@
 <script>
 import axios from 'axios'
 import apiTipo from '../../../api/resources/tipo.js'
+import apiCategoria from '../../../api/resources/categoria.js'
 
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
@@ -124,12 +129,16 @@ export default {
         horario_encerramento : null,
         dataFim: null,
         horaFim: null,
-        categoria: apiTipo.listarTipos,
+        categoria: null,
         imagem: null,
         created_by_user: 1,
       },
       tipos: [],
       selectedTipo: null,
+
+      categorias: [],
+      selectedCategoria: null,
+
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
       ]
@@ -137,15 +146,24 @@ export default {
   },
   created() {
     this.carregaTipos()
+    this.carregaCategorias()
   },
   methods: {
     carregaTipos() {
       apiTipo.listarTipos().then(
-        (respostaCategoria) => {
-          this.tipos = respostaCategoria
+        (respostaTipo) => {
+          this.tipos = respostaTipo
         }
       )
     },
+    carregaCategorias(){
+      apiCategoria.listarCategorias().then(
+        (respostaCategoria) => {
+          this.categorias = respostaCategoria
+        }
+      )
+    },
+
     fecharCriarEventoDialog() {
       this.$emit("fecharCriarEventoDialog")
     },
