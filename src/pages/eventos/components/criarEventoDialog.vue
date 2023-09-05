@@ -107,9 +107,9 @@
 </template>
 
 <script>
-import axios from 'axios'
 import apiTipo from '../../../api/resources/tipo.js'
 import apiCategoria from '../../../api/resources/categoria.js'
+import apiEvento from '../../../api/resources/evento.js'
 
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
@@ -185,30 +185,27 @@ export default {
       }
     },
     adicionarEvento() {
-      const formData = new FormData();
 
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
       this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
 
-      formData.append('nome', this.evento.nome);
-      formData.append('descricao', this.evento.descricao);
-      formData.append('categoria', this.evento.categoria);
-      formData.append('local', this.evento.local);
-      formData.append('created_at', new Date().toISOString());
-      formData.append('data_inicial', this.evento.horario_inicio);
-      formData.append('situacao', 'Em Aprovação');
-      formData.append('data_final', this.evento.horario_encerramento);
-      formData.append('tipo', this.evento.tipo);
+      const evento = 
+      {
+        nome: this.evento.nome,
+        descricao: this.evento.descricao,
+        categoria: this.selectedCategoria,
+        tipo: this.selectedTipo,
+        local: this.evento.local,
+        data_inicial: this.evento.horario_inicio,
+        data_final: this.evento.horario_encerramento,
+        situacao: "Em Aprovação",
+        created_by_user: 1
+      }
 
-      formData.append('created_by_user', 1);
+      apiEvento.cadastrarEvento(evento).then( () => {
+        console.log(evento)
+      })
       
-      axios.post('http://127.0.0.1/eventos/', formData)
-      .then((response)=>{        
-        console.log(response.data)
-      })
-      .catch(error =>{
-        console.log(error)
-      })
     }
   }
 }
