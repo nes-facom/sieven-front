@@ -193,14 +193,15 @@ export default {
       {
         nome: this.evento.nome,
         descricao: this.evento.descricao,
-        categoria: this.selectedCategoria,
-        tipo: this.selectedTipo,
+        id_categoria: this.selectedCategoria,
+        id_tipo: this.selectedTipo,
         local: this.evento.local,
         data_inicial: this.evento.horario_inicio,
         data_final: this.evento.horario_encerramento,
         situacao: "Em Aprovação",
         created_by_user: 1
       }
+      console.log(evento)
 
       apiEvento.cadastrarEvento(evento).then( () => {
         console.log(evento)
