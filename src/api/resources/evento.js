@@ -15,6 +15,22 @@ const eventoResource =
             })
         })
     },
+
+    listarEventos()
+    {
+        return new Promise( (resolve) =>
+        {
+            apiUsuario.post(`/evento`, ).then( (res) =>
+            {
+                resolve(res.data)
+            }).catch( () =>
+            {
+
+            })
+        })
+    },
 }
+
+
 
 export default eventoResource
