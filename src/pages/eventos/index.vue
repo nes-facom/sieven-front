@@ -15,7 +15,7 @@
         </v-img>
         <v-card-subtitle class="py-0 font-weight-bold"
                          style="color: #0088B7">
-          {{ evento.dataInicio }} > {{ evento.dataFim }}
+          {{ evento.data_inicial }} > {{ evento.data_final }}
         </v-card-subtitle>
 
         <v-card-title>
@@ -57,12 +57,6 @@
         </criar-evento-dialog>
       </v-dialog>
     </v-row>
-    <vue-pagination-2 v-if="totalPaginas > 1"
-                      :current.sync="paginaAtual"
-                      :total="totalPaginas"
-                      :per-page="itensPorPagina"
-                      @on-change="paginaMudou">
-    </vue-pagination-2>  
   </div>
 </template>
 <script>
@@ -75,57 +69,16 @@ export default {
   data() {
     return {
       criarEventoDialog: false,
-      eventos: [
-        // { id: 1, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 2, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 3, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 4, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 5, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 6, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 7, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 8, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 9, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 10, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 1, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 2, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 3, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 4, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 5, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 6, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 7, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 8, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 9, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 10, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 1, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 2, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 3, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 4, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 5, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 6, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 7, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 8, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 9, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-        // { id: 10, nome: 'Congresso Acadêmico', dataInicio: '18/04/2023', dataFim: '20/04/2023', local: 'FACOM - UFMS', imagem: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg'},
-    
-      ],
-      itensPorPagina: 5,
-      paginaAtual: 1
+      eventos: [],
+      
 
     }
-  },
-
-  computed: {
-    totalPaginas() {
-      return Math.ceil(this.eventos.length / this.itensPorPagina)
-    },
-    eventosDaPagina() {
-      const inicio = (this.paginaAtual - 1) * this.itensPorPagina
-      const fim = inicio + this.itensPorPagina
-      return this.eventos.slice(inicio, fim)
-    }
-  },
+  },  
   created() {
-    this.carregarEventos()
+    //this.carregarEventos()
+    apiEventos.listarEventos().then((response) => {
+      this.eventos = response
+    })
   },
   methods: {
     carregarEventos() {
@@ -137,9 +90,6 @@ export default {
     fecharCriarEventoDialog() {
       this.criarEventoDialog = false
     },
-    paginaMudou(novaPagina) {
-      this.paginaAtual = novaPagina
-    }
 
 
   }

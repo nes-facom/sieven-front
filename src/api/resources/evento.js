@@ -20,7 +20,7 @@ const eventoResource =
     {
         return new Promise( (resolve) =>
         {
-            apiUsuario.post(`/evento`, ).then( (res) =>
+            apiUsuario.get(`/eventos/exibir-eventos`, ).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
@@ -29,6 +29,20 @@ const eventoResource =
             })
         })
     },
+
+    visualizarEventos(){
+        return new Promise( (resolve) =>
+        {
+            apiUsuario.get(`/eventos/{id}`, ).then( (res) =>
+            {
+                resolve(res.data)
+            }).catch( () =>
+            {
+
+            })
+        })
+    }
+
 }
 
 
