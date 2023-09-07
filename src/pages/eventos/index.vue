@@ -27,7 +27,7 @@
       </v-card>
 
 
-      <v-dialog v-if="this.$store.getters.isEditor"
+      <v-dialog 
                 v-model="criarEventoDialog"
                 width="1000">
         <template v-slot:activator="{ on, attrs }">

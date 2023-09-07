@@ -6,6 +6,7 @@ import Evento from '@/pages/evento/index.vue'
 import Inscricoes from '@/pages/inscricoes/index.vue'
 import Validador from '@/pages/validador/index.vue'
 import Admin from '@/pages/admin/index.vue'
+import Vue from 'vue'
 
 const router = new VueRouter({
   routes: [
@@ -17,34 +18,70 @@ const router = new VueRouter({
       {
           path: '/registro',
           name: 'registro',
-          component: Registro
+          component: Registro,
+          meta: {
+            isAuthenticated: true
+          }
       },
       {
           path: '/eventos',
           name: 'eventos',
-          component: Eventos
+          component: Eventos,
+          meta: {
+            isAuthenticated: true
+          }
       },
       {
           path: '/inscricoes',
           name: 'inscricoes',
-          component: Inscricoes
+          component: Inscricoes,
+          meta: {
+            isAuthenticated: true
+          }
       },
       {
           path: '/evento/:id',
           name: 'evento',
-          component: Evento
+          component: Evento,
+          meta: {
+            isAuthenticated: true
+          }
       },
       {
           path: '/validador',
           name: 'validador',
-          component: Validador
+          component: Validador,
+          meta: {
+            isAuthenticated: true
+          }
       },
       {
           path: '/admin',
           name: 'admin',
-          component: Admin
+          component: Admin,
+          meta: {
+            isAuthenticated: true
+          }
       },
     ]
+  })
+
+
+  router.beforeEach((to, from, next) => {
+    if (to.meta.isAuthenticated) {
+      // Get the actual url of the app, it's needed for Keycloak
+      const basePath = window.location.toString()
+      if (!Vue.$keycloak.authenticated) {
+        // The page is protected and the user is not authenticated. Force a login.
+        Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
+      }
+      else {
+        next()
+      }
+    } else {
+      // This page did not require authentication
+      next()
+    }
   })
 
 export default router

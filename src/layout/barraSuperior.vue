@@ -4,20 +4,19 @@
           <v-col>
             <v-img :src="require('@/assets/identidade/logo-horizontal-sem-fundo.png')"
                    class="ml-2"
-                   width="110"
-                   @click="redirecionarHome">
+                   width="110">
             </v-img>
           </v-col>
 
           <v-spacer></v-spacer>
 
-          <v-toolbar-title v-if="this.$store.getters.getLogado"
+          <v-toolbar-title 
                            class="mr-2"
                            style="color: grey">
-            {{ this.$store.getters.getUsuarioNome }}
+           
           </v-toolbar-title>
 
-          <div v-if="!this.$store.getters.getLogado">
+          <div >
             <v-btn class="mr-3"
                    color="#0088B7"
                    @click="redirecionarLogin">
@@ -27,8 +26,7 @@
             </v-btn>
           </div>
 
-          <div v-else
-               class="mr-1">
+          <div class="mr-1">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn icon
@@ -56,31 +54,33 @@
 </template>
 
 <script>
+
+
 export default {
   name: "pgBarraSuperiorIndex",
   methods: {
-    estouNaPagina(nomePagina) {
-      return this.$route.name == nomePagina
-    },
-    redirecionarHome() {
-      if (this.$store.getters.getLogado) {
-        this.redirecionarDashboard()
-      } else {
-        this.redirecionarPaginainicial()
-      }
-    },
-    redirecionarDashboard() {
-      if (!this.estouNaPagina('eventos')){
-        this.$router.push({ name: 'eventos' })
-      }
-    },
-    redirecionarPaginainicial() {
-      if (!this.estouNaPagina('paginaInicial')){
-        this.$router.push({ name: 'paginaInicial' })
-      }
-    },
+    // estouNaPagina(nomePagina) {
+    //   return this.$route.name == nomePagina
+    // },
+    // redirecionarHome() {
+    //   if (this.$store.getters.getLogado) {
+    //     this.redirecionarDashboard()
+    //   } else {
+    //     this.redirecionarPaginainicial()
+    //   }
+    // },
+    // redirecionarDashboard() {
+    //   if (!this.estouNaPagina('eventos')){
+    //     this.$router.push({ name: 'eventos' })
+    //   }
+    // },
+    // redirecionarPaginainicial() {
+    //   if (!this.estouNaPagina('paginaInicial')){
+    //     this.$router.push({ name: 'paginaInicial' })
+    //   }
+    // },
     redirecionarLogin() {
-      this.logar()
+      console.log('TESTE')
       this.$router.push({ name: 'eventos' })
     },
     logar() {
