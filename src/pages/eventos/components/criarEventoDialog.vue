@@ -75,11 +75,13 @@
               outlined
           ></v-select> 
           <v-file-input label="Imagem"
+                        v-model="selectedImage"
                         prepend-icon="mdi-camera"
                         accept="image/png"
                         placeholder="Selecione a imagem banner do evento"
                         :rules="regrasImagem"
-                        outlined>
+                        outlined
+                        @change="handleImageUpload">
           </v-file-input>
         </v-col>
       </v-row>
@@ -130,9 +132,10 @@ export default {
         dataFim: null,
         horaFim: null,
         categoria: null,
-        imagem: null,
+        base64Image: null,
         created_by_user: 1,
       },
+      selectedImage: null,
       tipos: [],
       selectedTipo: null,
 
@@ -184,6 +187,22 @@ export default {
         this.evento.horaFim = valor
       }
     },
+
+    async handleImageUpload() {
+    if (this.selectedImage) {
+      const file = this.selectedImage;
+
+      // Use FileReader para ler o arquivo como uma URL de dados (Base64)
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.evento.base64Image = e.target.result; // Armazena a imagem em Base64
+      };
+
+      reader.readAsDataURL(file);
+    }
+    },
+
     adicionarEvento() {
 
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
@@ -198,6 +217,7 @@ export default {
         local: this.evento.local,
         data_inicial: this.evento.horario_inicio,
         data_final: this.evento.horario_encerramento,
+        imagem: this.evento.base64Image,
         situacao: "Em Aprovação",
         created_by_user: 1
       }
