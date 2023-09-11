@@ -4,19 +4,20 @@
           <v-col>
             <v-img :src="require('@/assets/identidade/logo-horizontal-sem-fundo.png')"
                    class="ml-2"
-                   width="110">
+                   width="110"
+                   >
             </v-img>
           </v-col>
 
           <v-spacer></v-spacer>
 
-          <v-toolbar-title 
+          <v-toolbar-title v-if="this.$keycloak.authenticated"
                            class="mr-2"
                            style="color: grey">
-           
+            {{ this.$keycloak.idTokenParsed.preferred_username }}
           </v-toolbar-title>
 
-          <div >
+          <div v-if="!this.$keycloak.authenticated">
             <v-btn class="mr-3"
                    color="#0088B7"
                    @click="redirecionarLogin">
@@ -26,7 +27,8 @@
             </v-btn>
           </div>
 
-          <div class="mr-1">
+          <div v-else
+               class="mr-1">
             <v-menu offset-y>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn icon
@@ -54,7 +56,6 @@
 </template>
 
 <script>
-
 
 export default {
   name: "pgBarraSuperiorIndex",
