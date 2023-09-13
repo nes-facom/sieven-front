@@ -7,6 +7,7 @@ import Inscricoes from '@/pages/inscricoes/index.vue'
 import Validador from '@/pages/validador/index.vue'
 import Admin from '@/pages/admin/index.vue'
 import Vue from 'vue'
+import apiAdministrador from '../api/resources/administrador';
 
 const router = new VueRouter({
   routes: [
@@ -76,10 +77,22 @@ const router = new VueRouter({
         Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
       }
       else {
-        next()
+        try {
+          apiAdministrador.verificarAdmin(Vue.$keycloak.idTokenParsed.preferred_username).then( (retorno) =>  {
+            console.log(retorno)
+            if (retorno.status === 200) {
+              next();
+              console.log('retornou 200')
+            }
+          }) 
+        } catch (error) {
+          console.loge(error)
+        }
+
+        console.log('debug')
       }
     } else {
-      // This page did not require authentication
+      
       next()
     }
   })
