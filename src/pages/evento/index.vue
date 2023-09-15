@@ -206,6 +206,7 @@ import moment from 'moment'
 import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
 import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue'
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
+import apiEvento from '../../api/resources/evento.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
 
 export default {
@@ -254,9 +255,9 @@ export default {
       this.atividades[atividadeId - 1].dialog = false
     },
     carregarEvento(eventoId) {
-      axios.get(`http://127.0.0.1/eventos/${eventoId}`)
+      apiEvento.visualizarEventos(eventoId)
           .then(response => {
-            const eventoResponse = response.data;
+            const eventoResponse = response
 
             const dataInicial = new Date(eventoResponse.data_inicial);
             const horaInicial = dataInicial.toLocaleTimeString();
@@ -332,7 +333,7 @@ export default {
   },
   created() {
     const eventoId = this.$route.params.eventoId
-    this.carregarAtividade(eventoId)
+    //this.carregarAtividade(eventoId)
     this.carregarEvento(eventoId)
   }
 }

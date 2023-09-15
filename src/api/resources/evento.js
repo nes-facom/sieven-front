@@ -30,10 +30,10 @@ const eventoResource =
         })
     },
 
-    visualizarEventos(){
+    visualizarEventos(eventoId){
         return new Promise( (resolve) =>
         {
-            apiUsuario.get(`/eventos/{id}`, ).then( (res) =>
+            apiUsuario.get(`/evento/${eventoId}`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
