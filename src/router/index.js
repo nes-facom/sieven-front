@@ -8,6 +8,7 @@ import Validador from '@/pages/validador/index.vue'
 import Admin from '@/pages/admin/index.vue'
 import Vue from 'vue'
 import apiAdministrador from '../api/resources/administrador';
+import store from '@/store';
 
 const router = new VueRouter({
   routes: [
@@ -77,12 +78,18 @@ const router = new VueRouter({
         Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
       }
       else {
+        console.log('caiu no else')
         try {
           apiAdministrador.verificarAdmin(Vue.$keycloak.idTokenParsed.preferred_username).then( (retorno) =>  {
             console.log(retorno)
-            if (retorno.status === 200) {
+            if (retorno.status == 200) {
+              console.log('to admin route')
+              const isAdmin = true;
+              store.dispatch('setAdminStatus', isAdmin);
               next();
-              console.log('retornou 200')
+              //console.log('retornou 200')
+            } else if (retorno.status == 404){
+              //console.log('Não foi possível encontrar tal administrador')
             }
           }) 
         } catch (error) {

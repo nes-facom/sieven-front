@@ -31,7 +31,8 @@
                 v-model="criarEventoDialog"
                 width="1000">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary"
+          <v-btn v-if="isAdmin"
+                color="primary"
                  large
                  fixed
                  right
@@ -55,6 +56,7 @@
 <script>
 import criarEventoDialog from '@/pages/eventos/components/criarEventoDialog.vue'
 import axios from 'axios'
+import { mapGetters } from 'vuex';
 
 export default {
   name: "pgEventosIndex",
@@ -76,6 +78,15 @@ export default {
       ]
     }
   },
+
+  computed: {
+    ...mapGetters(['isAdmin']), // Mapeia o estado de isAdmin do Vuex
+    userName() {
+      // Obtenha o nome do usuário a partir da autenticação, por exemplo
+      return 'Nome do Usuário'; // Substitua pelo nome real do usuário
+    },
+  },
+  
   created() {
     this.carregarEventos()
   },
