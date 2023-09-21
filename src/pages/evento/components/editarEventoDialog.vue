@@ -1,11 +1,11 @@
 <template>
-  <div id="pgCriarEventoDialog">
+<div id="pgEditarEventoDialog">
     <v-card class="pa-10"
             width="1000">
       <v-row justify="center"
              class="text-h2 font-weight-bold"
              style="color: #097FA8">
-        Crie seu evento
+        Editar Evento
       </v-row>
 
       <v-row class="mt-10">
@@ -93,14 +93,14 @@
                  color="black"
                  width="150"
                  outlined
-                 @click="fecharCriarEventoDialog()">
+                 @click="fecharEditarEventoDialog()">
             Cancelar
           </v-btn>
           <v-btn style="color: white;"
                  color="#097FA8"
                  width="150"
-                 @click="adicionarEvento()">
-            Criar Evento
+                 @click="salvarEvento()">
+            Salvar evento
           </v-btn>
         </v-col>
       </v-row>
@@ -109,17 +109,18 @@
 </template>
 
 <script>
+
 import apiTipo from '../../../api/resources/tipo.js'
 import apiCategoria from '../../../api/resources/categoria.js'
 import apiEvento from '../../../api/resources/evento.js'
+import dataPicker from '@/pages/eventos/components/dataPicker.vue';
+import timePicker from '@/pages/eventos/components/timePicker.vue';
 
-import dataPicker from '@/pages/eventos/components/dataPicker.vue'
-import timePicker from '@/pages/eventos/components/timePicker.vue'
-export default {
-  name: "pgCriarEventoDialogIndex",
+export default{
+  name:"pgEditarEventoIndex",
   components: { dataPicker, timePicker },
-  data() {
-    return {
+  data(){
+    return{
       evento: {
         nome: null,
         descricao: null,
@@ -147,10 +148,12 @@ export default {
       ]
     }
   },
+
   created() {
     this.carregaTipos()
     this.carregaCategorias()
   },
+
   methods: {
     carregaTipos() {
       apiTipo.listarTipos().then(
@@ -167,18 +170,16 @@ export default {
       )
     },
 
-    fecharCriarEventoDialog() {
-      this.$emit("fecharCriarEventoDialog")
+    fecharEditarEventoDialog() {
+      this.$emit("fecharEditarEventoDialog")
     },
+
     selecaoData(campo, valor) {
       if (campo == 'dataInicio') {
         this.evento.dataInicio = valor
       } else if (campo == 'dataFim') {
         this.evento.dataFim = valor
       }
-    },
-    getEventos() {
-      
     },
     selecaoHora(campo, valor) {
       if (campo == 'horaInicio') {
@@ -202,10 +203,8 @@ export default {
     }
     },
 
-    adicionarEvento() {
-
-      this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
-      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
+    salvarEvento(){
+      const eventoId = this.$route.params.eventoId
 
       const evento = 
       {
@@ -214,23 +213,63 @@ export default {
         id_categoria: this.selectedCategoria,
         id_tipo: this.selectedTipo,
         local: this.evento.local,
-        data_inicial: this.evento.horario_inicio,
-        data_final: this.evento.horario_encerramento,
+        data_inicial: this.evento.dataInicio,
+        data_final: this.evento.dataFim,
+        horaInicio: this.evento.horaInicio,
+        horaFim: this.evento.horaFim,
         imagem: this.evento.base64Image,
         situacao: "Em Aprovação",
         created_by_user: 1
       }
       console.log(evento)
-
-      apiEvento.cadastrarEvento(evento).then( () => {
-        console.log(evento)
+      apiEvento.editarEventos(eventoId).then(response => {
+        console.log(response)
+        
       })
-      
+      .catch((error) => {
+        console.error(error)
+      })
+      this.$emit('fecharEditarEventoDialog');
     }
+  },
+
+  mounted(){
+    const eventoId = this.$route.params.eventoId
+    apiEvento.visualizarEventos(eventoId)
+    .then(response => {
+      const eventoResponse = response
+      const dataInicial = new Date(eventoResponse.data_inicial);
+      const horaInicial = dataInicial.toLocaleTimeString();
+      const dataInicialFormatada = dataInicial.toLocaleDateString();
+
+      const dataFinal = new Date(eventoResponse.data_final);
+      const horaFinal = dataFinal.toLocaleTimeString();
+      const dataFinalFormatada = dataFinal.toLocaleDateString();
+  
+
+      this.evento = {
+        imagem: eventoResponse.imagem || 'https://img2.gratispng.com/20180510/sxq/kisspng-boulder-theater-computer-icons-ticket-cinema-5af509b9cdcea8.635574511526008249843.jpg',
+        nome: eventoResponse.nome,
+        descricao: eventoResponse.descricao,
+        local: eventoResponse.local,
+        dataInicio: dataInicialFormatada,
+        horaInicio: horaInicial,
+        dataFim: dataFinalFormatada,
+        horaFim : horaFinal,
+        tipo: eventoResponse.tipo,
+        categoria: eventoResponse.categoria,
+        created_at: new Date().toISOString(),
+        dialog: false
+      };
+
+    })
+      .catch(error => {
+      console.log(eventoId, error);
+    });
   }
 }
 </script>
 
-<style>
 
+<style>
 </style>

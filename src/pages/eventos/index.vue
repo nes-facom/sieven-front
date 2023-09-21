@@ -75,10 +75,8 @@ export default {
     }
   },  
   created() {
-    //this.carregarEventos()
     apiEventos.listarEventos().then((response) => {
       this.eventos = response
-      //console.log(this.eventos);
     })
   },
   methods: {

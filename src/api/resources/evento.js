@@ -41,6 +41,21 @@ const eventoResource =
 
             })
         })
+    },
+
+    editarEventos(eventoId){
+        return new Promise( (resolve, reject) =>
+        {
+            const successResponse = { message: 'Event updated successfully' };
+            apiUsuario.put(`/evento/${eventoId}`).then( (res) =>
+            {
+                console.log(res)
+                resolve(successResponse)
+            }).catch( (error) =>
+            {   
+                reject(error)
+            })
+        })
     }
 
 }

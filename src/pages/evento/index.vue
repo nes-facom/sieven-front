@@ -9,15 +9,24 @@
                  id="cardBase"
                  class="mx-auto">      
           </v-img>
-          <v-btn
-          class="editar-evento-button"
-          color="#0088B7"
-          dark
-          @click="editarEvento"
-        >
+          <v-dialog v-if="this.$store.getters.isEditor"
+                          v-model="editarEventoDialog"
+                          width="1000">
+          <template v-slot:activator="{on, attrs}">
+            <v-btn
+              class="editar-evento-button"
+              color="#0088B7"
+              dark
+              v-bind="attrs"
+              v-on="on">
           <v-icon left>mdi-pencil</v-icon> Editar Evento
         </v-btn>
+          </template>
+          <editar-evento-dialog @fecharEditarEventoDialog="fecharEditarEventoDialog">
+          </editar-evento-dialog>
+          </v-dialog>
         </div>
+       
         </v-row>
       <div id="eventNameConteiner">
           {{ evento.nome }}
@@ -198,15 +207,17 @@
 import axios from 'axios'
 import moment from 'moment'
 
+import editarEventoDialog from './components/editarEventoDialog.vue'
 import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
-import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue'
+import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue' 
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
 import apiEvento from '../../api/resources/evento.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
 
+
 export default {
   name: "pgEventoIndex",
-  components: { atividadeDialog, criarAtividadeDialog, dadosEvento, excluirAtividadeDialog },
+  components: { atividadeDialog, criarAtividadeDialog, dadosEvento, excluirAtividadeDialog, editarEventoDialog},
   data() {
     return {
       evento: {
@@ -214,7 +225,8 @@ export default {
       },
       atividades: [
     ],
-      criarAtividadeDialog: false
+      criarAtividadeDialog: false,
+      editarEventoDialog:false
     }
   },
   methods: {
@@ -230,6 +242,9 @@ export default {
     },
     fecharAtividadeDialog(atividadeId) {
       this.atividades[atividadeId - 1].dialog = false
+    },
+    fecharEditarEventoDialog(){
+      this.editarEventoDialog = false
     },
     carregarEvento(eventoId) {
       apiEvento.visualizarEventos(eventoId)
@@ -263,9 +278,6 @@ export default {
           .catch(error => {
             console.log(eventoId, error);
           });
-    },
-    editarEvento(){
-
     },
     carregarAtividade(eventoId) {
       axios.get(`http://127.0.0.1/atividades/evento/${eventoId}`)
