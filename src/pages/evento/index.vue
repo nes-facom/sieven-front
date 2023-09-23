@@ -9,6 +9,30 @@
                  id="cardBase"
                  class="mx-auto">      
           </v-img>
+          <v-btn class="excluir-evento-button"
+          color="white"
+          outlined
+          @click="exibirExcluirConfirmacao">
+            Excluir
+          </v-btn>
+          <v-dialog v-model="excluirDialogConfirmacao" max-width="750"  
+            >
+            <v-card class="excluirDialog">
+              <v-card-title class="text-h4 font-weight-bold" style="color: #097FA8; text-align: center; margin-left:37%;">
+                Atenção!
+              </v-card-title>
+              <v-card-text>
+                <p style="color: #50525F; text-align: justify; font-size: 22px; font-weight: 400; font-style: normal; margin-top:3%">
+                  Tem certeza que deseja remover esse evento? Todas as suas informações e atividades serão excluídas em definitivo.
+                </p>
+              </v-card-text>
+              <v-card-actions>
+                    <v-btn color="#097FA8" text @click="cancelarEventoExclusao" style="margin-left:72%;">Cancelar</v-btn>
+                    <v-btn color="red" text @click="confirmarEventoExclusao">Remover</v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+
           <v-dialog v-if="this.$store.getters.isEditor"
                           v-model="editarEventoDialog"
                           width="1000">
@@ -19,15 +43,15 @@
               dark
               v-bind="attrs"
               v-on="on">
-          <v-icon left>mdi-pencil</v-icon> Editar Evento
-        </v-btn>
+              Editar
+            </v-btn>
           </template>
           <editar-evento-dialog @fecharEditarEventoDialog="fecharEditarEventoDialog">
           </editar-evento-dialog>
           </v-dialog>
         </div>
        
-        </v-row>
+      </v-row>
       <div id="eventNameConteiner">
           {{ evento.nome }}
       </div>
@@ -38,8 +62,8 @@
                         :data-fim="evento.dataFim"
                         :data-inicio="evento.dataInicio"
                         :local="evento.local"
-                        :tipo = "evento.tipo"
-                        :categoria = "evento.categoria">
+                        :tipo="evento.tipo"
+                        :categoria="evento.categoria">
           </dados-evento>
         </div>
           <h2 class="mt-4" style="font-size: 20px; color: #1E1E1E; font-style: italic; margin-bottom: 20px; margin-left: 5%">Sobre o Evento</h2>
@@ -220,13 +244,12 @@ export default {
   components: { atividadeDialog, criarAtividadeDialog, dadosEvento, excluirAtividadeDialog, editarEventoDialog},
   data() {
     return {
-      evento: {
-      
-      },
+      evento: {},
       atividades: [
     ],
       criarAtividadeDialog: false,
-      editarEventoDialog:false
+      editarEventoDialog:false,
+      excluirDialogConfirmacao: false
     }
   },
   methods: {
@@ -239,6 +262,12 @@ export default {
       } else {
        return descricao
       }
+    },
+    exibirExcluirConfirmacao() {
+      this.excluirDialogConfirmacao = true;
+    },
+    cancelarEventoExclusao(){
+      this.excluirDialogConfirmacao = false;
     },
     fecharAtividadeDialog(atividadeId) {
       this.atividades[atividadeId - 1].dialog = false
@@ -278,6 +307,21 @@ export default {
           .catch(error => {
             console.log(eventoId, error);
           });
+    },
+    confirmarEventoExclusao(){
+      const eventoId = this.$route.params.eventoId;
+
+      apiEvento.deletarEventos(eventoId)
+      .then(response =>{
+        console.log('Evento excluído com sucesso', response)
+        this.excluirDialogConfirmacao = false
+        this.$router.push({ name: 'eventos' })
+      })
+      .catch(error => {
+        console.error('Erro ao excluir evento', error)
+        this.excluirDialogConfirmacao = false
+      })
+      
     },
     carregarAtividade(eventoId) {
       axios.get(`http://127.0.0.1/atividades/evento/${eventoId}`)
@@ -346,6 +390,9 @@ export default {
  margin-bottom: 100px;
  margin-right: 15%;
 }
+#excluirDialog{
+  width: 600px;
+}
 #cardBase {
   width: 100%;
   height: 100%;
@@ -360,6 +407,7 @@ export default {
   font-weight: bold;
 }
 
+
 .editar-evento-button {
   display: inline-flex;
   padding: 6px 12px;
@@ -370,9 +418,21 @@ export default {
   border: 1px solid #0088B7;
   background: #0088B7;
   color: white;
-  margin-top: 20px;
   margin-left: 77%;
-  
+  margin-top: -8.3%; 
+}
+.excluir-evento-button{
+  display: inline-flex;
+  padding: 6px 12px;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  border-radius: 4px;
+  border: 1px solid white;
+  background: #AC220FE0;
+  color: white;
+  margin-top:60px;
+  margin-left:60%;
 }
 
 </style>

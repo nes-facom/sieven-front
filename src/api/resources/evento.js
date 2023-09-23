@@ -43,21 +43,30 @@ const eventoResource =
         })
     },
 
-    editarEventos(eventoId){
+    editarEventos(eventoId , eventoData){
         return new Promise( (resolve, reject) =>
         {
-            const successResponse = { message: 'Event updated successfully' };
-            apiUsuario.put(`/evento/${eventoId}`).then( (res) =>
-            {
-                console.log(res)
-                resolve(successResponse)
+            apiUsuario.put(`/evento/${eventoId}` , eventoData).then((res) =>
+            {   
+                resolve(res)
             }).catch( (error) =>
             {   
                 reject(error)
             })
         })
-    }
+    },
 
+    deletarEventos(eventoId) {
+        return new Promise((resolve, reject) => {
+          apiUsuario.delete(`/evento/${eventoId}`)
+            .then((res) => {
+              resolve(res);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      }
 }
 
 

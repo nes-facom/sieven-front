@@ -85,7 +85,7 @@ export default {
   position: relative;
   margin-top: 40px;
   margin-bottom: 70px;
-  margin-right: 73%;
+  margin-right: 76%;
   
 
 }
