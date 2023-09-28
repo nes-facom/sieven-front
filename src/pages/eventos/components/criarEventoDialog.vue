@@ -57,17 +57,31 @@
                       v-model="evento.descricao"
                       auto-grow
                       outlined>
-          </v-textarea>
-          <v-text-field label="Modalidade"
-                        v-model="evento.modalidade"
-                        outlined>
-          </v-text-field>
+          </v-textarea> 
+          <v-select
+              v-model="selectedCategoria"
+              :items="categorias"
+              item-value="id" 
+              item-text="nome_categoria"
+              label="Categoria"
+              outlined
+          ></v-select> 
+          <v-select
+              v-model="selectedTipo"
+              :items="tipos"
+              item-value="id" 
+              item-text="nome_tipo"
+              label="Tipo"
+              outlined
+          ></v-select> 
           <v-file-input label="Imagem"
+                        v-model="selectedImage"
                         prepend-icon="mdi-camera"
                         accept="image/png"
                         placeholder="Selecione a imagem banner do evento"
                         :rules="regrasImagem"
-                        outlined>
+                        outlined
+                        @change="handleImageUpload">
           </v-file-input>
         </v-col>
       </v-row>
@@ -95,7 +109,9 @@
 </template>
 
 <script>
-import axios from 'axios'
+import apiTipo from '../../../api/resources/tipo.js'
+import apiCategoria from '../../../api/resources/categoria.js'
+import apiEvento from '../../../api/resources/evento.js'
 
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
@@ -107,7 +123,7 @@ export default {
       evento: {
         nome: null,
         descricao: null,
-        modalidade: null,
+        tipo: null,
         local: null,
         dataInicio: null,
         horaInicio: null,
@@ -115,15 +131,42 @@ export default {
         horario_encerramento : null,
         dataFim: null,
         horaFim: null,
-        imagem: null,
+        categoria: null,
+        base64Image: null,
         created_by_user: 1,
-      },            
+      },
+      selectedImage: null,
+      tipos: [],
+      selectedTipo: null,
+
+      categorias: [],
+      selectedCategoria: null,
+
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
       ]
     }
   },
+  created() {
+    this.carregaTipos()
+    this.carregaCategorias()
+  },
   methods: {
+    carregaTipos() {
+      apiTipo.listarTipos().then(
+        (respostaTipo) => {
+          this.tipos = respostaTipo
+        }
+      )
+    },
+    carregaCategorias(){
+      apiCategoria.listarCategorias().then(
+        (respostaCategoria) => {
+          this.categorias = respostaCategoria
+        }
+      )
+    },
+
     fecharCriarEventoDialog() {
       this.$emit("fecharCriarEventoDialog")
     },
@@ -134,6 +177,9 @@ export default {
         this.evento.dataFim = valor
       }
     },
+    getEventos() {
+      
+    },
     selecaoHora(campo, valor) {
       if (campo == 'horaInicio') {
         this.evento.horaInicio = valor
@@ -141,29 +187,45 @@ export default {
         this.evento.horaFim = valor
       }
     },
+
+    async handleImageUpload() {
+    if (this.selectedImage) {
+      const file = this.selectedImage;
+
+      const reader = new FileReader();
+
+      reader.onload = (e) => {
+        this.evento.base64Image = e.target.result;
+      };
+
+      reader.readAsDataURL(file);
+    }
+    },
+
     adicionarEvento() {
-      const formData = new FormData();
 
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
       this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
 
-      formData.append('nome', this.evento.nome);
-      formData.append('descricao', this.evento.descricao);
-      formData.append('modalidade', this.evento.modalidade);
-      formData.append('local', this.evento.local);
-      formData.append('created_at', new Date().toISOString());
-      formData.append('data_inicial', this.evento.horario_inicio);
-      formData.append('situacao', 'Em Aprovação');
-      formData.append('data_final', this.evento.horario_encerramento);      
-      formData.append('created_by_user', 1);
+      const evento = 
+      {
+        nome: this.evento.nome,
+        descricao: this.evento.descricao,
+        id_categoria: this.selectedCategoria,
+        id_tipo: this.selectedTipo,
+        local: this.evento.local,
+        data_inicial: this.evento.horario_inicio,
+        data_final: this.evento.horario_encerramento,
+        imagem: this.evento.base64Image,
+        situacao: "Em Aprovação",
+        created_by_user: 1
+      }
+      console.log(evento)
+
+      apiEvento.cadastrarEvento(evento).then( () => {
+        console.log(evento)
+      })
       
-      axios.post('http://127.0.0.1/eventos/', formData)
-      .then((response)=>{        
-        console.log(response.data)
-      })
-      .catch(error =>{
-        console.log(error)
-      })
     }
   }
 }

@@ -30,7 +30,7 @@ const router = new VueRouter({
           component: Inscricoes
       },
       {
-          path: '/evento/:id',
+          path: '/evento/:eventoId',
           name: 'evento',
           component: Evento
       },
