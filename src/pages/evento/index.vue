@@ -66,10 +66,10 @@
                         :categoria="evento.categoria">
           </dados-evento>
         </div>
-          <h2 class="mt-4" style="font-size: 20px; color: #1E1E1E; font-style: italic; margin-bottom: 20px; margin-left: 5%">Sobre o Evento</h2>
+          <h2 class="mt-4 responsivo-h2">Sobre o Evento</h2>          
           <div class="descricao-evento-container">
-          <div class="mt-2" style="color:#1E1E1E; font-size: medium;margin-left:5% ; margin-right:28%; text-align: justify;">
-                {{ evento.descricao }}
+          <div class="mt-2 responsivo-mt-2">
+              {{ evento.descricao }}
           </div>
         </div>
       </v-col>
@@ -297,8 +297,8 @@ export default {
               horaInicio: horaInicial,
               dataFim: dataFinalFormatada,
               horaFim : horaFinal,
-              tipo: eventoResponse.id_tipo,
-              categoria: eventoResponse.id_categoria,
+              tipo: eventoResponse.nome_tipo,
+              categoria: eventoResponse.nome_categoria,
               created_at: new Date().toISOString(),
               dialog: false
             };
@@ -433,6 +433,218 @@ export default {
   color: white;
   margin-top:60px;
   margin-left:60%;
+}
+.responsivo-h2 {
+  font-size: 20px;
+  color: #1E1E1E;
+  font-style: italic;
+  margin-bottom: 20px;
+  margin-left: 5%;
+}
+
+.responsivo-mt-2 {
+color: #1E1E1E;
+font-size: medium;
+margin-left: 5%;
+margin-right: 28%;
+text-align: justify;
+}
+
+
+@media (max-width: 1024px) {
+  #imageConteiner {
+    position: center;
+    width: 750px;
+    height: 394.037px;
+  }
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left:0.5%;
+    font-size: 25px;
+  }
+  .responsivo-h2{
+    margin-left: -0.5rem;
+  }
+  .responsivo-mt-2{
+    margin-left: -0.5rem;
+  }
+
+}
+@media (max-width: 915px) {
+  #imageConteiner {
+    position: center;
+    width: 600px;
+    height: 350px;
+    margin-bottom: 100px;
+    margin-right: 30%;
+  }
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: -5px;
+    font-size: 25px;
+  }
+
+}
+
+@media (max-width: 768px){
+  #imageConteiner {
+    position: center;
+    width: 600px;
+    height: 350px;
+    margin-bottom: 100px;
+    margin-right: 15%;
+
+}
+  .editar-evento-button{
+    text-align: center;
+    margin-left: 40%;
+  }
+  .responsivo-h2{
+    margin-left: -0.5rem;
+  }
+  .responsivo-mt-2{
+    margin-left: -0.5rem;
+  }
+}
+
+@media (max-width: 734px){
+  #imageConteiner {
+    position: center;
+    width: 600px;
+    height: 350px;
+    margin-bottom: 100px;
+    margin-left: 18%;
+
+}
+  .editar-evento-button{
+    text-align: center;
+    margin-left: 35%;
+  }
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 18%;
+    font-size: 15px;
+  }
+  .dados-eventos-container {
+    margin-bottom: 20px;
+    margin-left: 17%;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .responsivo-h2{
+    margin-left: 17%;
+  }
+  .responsivo-mt-2{
+    margin-left: 17%;
+  }
+}
+
+@media (max-width: 425px){
+  #imageConteiner {
+    position: center;
+    width: 300px;
+    height: 150px;
+    margin-bottom: 100px;
+    margin-right: 25%;
+    margin-left: 12%;
+  }
+ .editar-evento-button{
+  text-align: center;
+  margin-left: 20%;
+}
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 13%;
+    font-size: 15px;
+  }
+  .dados-eventos-container {
+    margin-bottom: 20px;
+    margin-left: 25%;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .responsivo-h2{
+    margin-left: 13%;
+    font-size: 15px;
+  }
+  .responsivo-mt-2{
+    margin-left: 13%;
+    font-size: 10px;
+  }
+}
+
+@media (max-width: 375px){
+  #imageConteiner {
+    position: center;
+    width: 270px;
+    height: 130px;
+    margin-bottom: 100px;
+    margin-right: 8%;
+    margin-left: 14%;
+  }
+  .editar-evento-button{
+    text-align: center;
+    margin-left: 18%;
+  }
+
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 10%;
+    font-size: 15px;
+}
+  .responsivo-h2{
+    margin-left: 10%;
+    font-size: 15px;
+  }
+  .responsivo-mt-2{
+    margin-left: 10%;
+    font-size: 10px;
+  }
+}
+
+
+@media (max-width: 320px){
+  #imageConteiner {
+    position: center;
+    width: 220px;
+    height: 120px;
+    margin-bottom: 100px;
+    margin-left: 20%;
+  }
+  .editar-evento-button{
+    text-align: center;
+    margin-right: 50%;
+  }
+
+  #eventNameConteiner {
+    position: relative;
+    margin-bottom: 20px;
+    margin-left: 20%;
+    font-size: 15px;
+  }
+  .dados-eventos-container {
+    margin-bottom: 50px;
+    margin-left: 40%;
+    font-size: 10px;
+    white-space: nowrap;
+  }
+  .editar-evento-button{
+    text-align: center;
+    margin-left: 15%;
+  }
+  .responsivo-h2{
+    margin-left: 15%;
+    font-size: 15px;
+  }
+  .responsivo-mt-2{
+    margin-left: 15%;
+    font-size: 10px;
+  }
 }
 
 </style>

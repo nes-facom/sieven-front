@@ -98,5 +98,26 @@ export default {
 
 
 <style>
+@media (max-width: 425px){
+  .mt-4 {
+    width: 280px;
+    height: 250px;
+    padding: 2.5rem;
+  }
+}
 
+@media (max-width: 375px){
+  .mt-4 {
+    width: 280px;
+    height: 250px;
+    padding: 2.5rem;
+  }
+}
+@media (max-width: 320px){
+  .mt-4 {
+    width: 280px;
+    height: 250px;
+    padding: 2.5rem;
+  }
+}
 </style>

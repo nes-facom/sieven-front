@@ -248,14 +248,14 @@
         this.evento = {
           nome: eventoResponse.nome,
           descricao: eventoResponse.descricao,
-          tipo: eventoResponse.id_tipo,
+          selectedTipo: eventoResponse.tipo,
           local: eventoResponse.local,
-          dataInicio: eventoResponse.dataInicio,
+          dataInicio: eventoResponse.data_inicial,
           horaInicio: eventoResponse.horaInicio,
-          dataFim: eventoResponse.dataFim,
+          dataFim: eventoResponse.data_final,
           horaFim: eventoResponse.horaFim,
-          categoria: eventoResponse.id_categoria,
-          base64Image: eventoResponse.imagem
+          selectedCategoria: eventoResponse.categoria,
+          base64Image: null
         };
         const dataInicioFormatted = moment(this.evento.dataInicio).format('YYYY-MM-DD')
         const dataFimFormatted = moment(this.evento.dataFim).format('YYYY-MM-DD')
