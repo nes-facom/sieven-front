@@ -11,10 +11,10 @@
 
           <v-spacer></v-spacer>
 
-          <v-toolbar-title v-if="this.$keycloak.authenticated"
+          <v-toolbar-title v-if="$store.getters.passport"
                            class="mr-2"
                            style="color: grey">
-            {{ this.$keycloak.idTokenParsed.preferred_username }}
+            {{ $store.getters.passport }}
           </v-toolbar-title>
 
           <div v-if="!this.$keycloak.authenticated">

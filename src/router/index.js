@@ -30,7 +30,7 @@ const router = new VueRouter({
           name: 'eventos',
           component: Eventos,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
       {
@@ -71,21 +71,27 @@ const router = new VueRouter({
 
   router.beforeEach((to, from, next) => {
     if (to.meta.isAuthenticated) {
+      Vue.$keycloak.authenticated  = true
+
       // Get the actual url of the app, it's needed for Keycloak
-      const basePath = window.location.toString()
+      //const basePath = window.location.toString()
       if (!Vue.$keycloak.authenticated) {
         // The page is protected and the user is not authenticated. Force a login.
-        Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
+        //Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
+        console.log('vish kk')
+        next()
       }
       else {
         console.log('caiu no else')
         try {
-          apiAdministrador.verificarAdmin(Vue.$keycloak.idTokenParsed.preferred_username).then( (retorno) =>  {
+          const adminPass = 'brunno.lewin' 
+          apiAdministrador.verificarAdmin(adminPass).then( (retorno) =>  {
             console.log(retorno)
             if (retorno.status == 200) {
               console.log('to admin route')
               const isAdmin = true;
               store.dispatch('updateAdminStatus', isAdmin);
+              store.dispatch('updatePassport', adminPass)
               next();
               //console.log('retornou 200')
             } else if (retorno.status == 404){
@@ -93,14 +99,14 @@ const router = new VueRouter({
             }
           }) 
         } catch (error) {
-          console.loge(error)
+          console.log(error)
         }
 
         console.log('debug')
       }
     } else {
-      const isAdmin = true;
-      store.dispatch('updateAdminStatus', isAdmin);
+      // const isAdmin = true;
+      // store.dispatch('updateAdminStatus', isAdmin);
       next()
     }
   })

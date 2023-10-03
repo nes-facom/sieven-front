@@ -34,7 +34,7 @@
       </v-card>
 
 
-      <v-dialog 
+      <v-dialog v-if="$store.getters.isAdmin"
                 v-model="criarEventoDialog"
                 width="1000">
         <template v-slot:activator="{ on, attrs }">

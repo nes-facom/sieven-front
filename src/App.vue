@@ -6,11 +6,13 @@
             <barra-superior></barra-superior>
           </v-col>
         </v-row>
-      <v-layout v-if="this.$store.getters.isAdmin">
+
+        
+      <template>
+        <v-layout v-if="$store.getters.isAdmin">
           <v-row>
             <v-col cols="2">
-              <barra-lateral v-if="this.$store.getters.isAdmin">
-              </barra-lateral>
+              <barra-lateral></barra-lateral>
             </v-col>
             <v-col>
               <v-main>
@@ -29,6 +31,7 @@
             </v-col>
           </v-row>
         </v-layout>
+      </template>
         
     </div>
   </v-app>
