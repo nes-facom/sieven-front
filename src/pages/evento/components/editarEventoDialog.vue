@@ -111,89 +111,89 @@
         </v-row>
       </v-card>
     </div>
-  </template>
+</template>
   
-  <script>
+<script>
   
-  import moment from 'moment';
-  import apiTipo from '../../../api/resources/tipo.js'
-  import apiCategoria from '../../../api/resources/categoria.js'
-  import apiEvento from '../../../api/resources/evento.js'
-  import dataPicker from '@/pages/eventos/components/dataPicker.vue';
-  import timePicker from '@/pages/eventos/components/timePicker.vue';
+import moment from 'moment';
+import apiTipo from '../../../api/resources/tipo.js'
+import apiCategoria from '../../../api/resources/categoria.js'
+import apiEvento from '../../../api/resources/evento.js'
+import dataPicker from '@/pages/eventos/components/dataPicker.vue';
+import timePicker from '@/pages/eventos/components/timePicker.vue';
   
-  export default{
-    name:"pgEditarEventoIndex",
-    components: { dataPicker, timePicker },
-    data(){
-      return{
-        evento: {
-          nome: null,
-          descricao: null,
-          tipo: null,
-          local: null,
-          dataInicio: null,
-          horaInicio: null,
-          dataFim: null,
-          horaFim: null,
-          categoria: null,
-          base64Image: null,
+export default{
+  name:"pgEditarEventoIndex",
+  components: { dataPicker, timePicker },
+  data(){
+    return{
+      evento: {
+        nome: null,
+        descricao: null,
+        tipo: null,
+        local: null,
+        dataInicio: null,
+        horaInicio: null,
+        dataFim: null,
+        horaFim: null,
+        categoria: null,
+        base64Image: null,
   
-        },
-        selectedImage: null,
-        tipos: [],
-        selectedTipo: null,
+      },
+      selectedImage: null,
+      tipos: [],
+      selectedTipo: null,
   
-        categorias: [],
-        selectedCategoria: null,
+      categorias: [],
+      selectedCategoria: null,
   
-        regrasImagem: [
+      regrasImagem: [
           value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
-        ]
+      ]
+    }
+  },
+  
+  created() {
+    this.carregaTipos()
+    this.carregaCategorias()
+  },
+  
+  methods: {
+    carregaTipos() {
+      apiTipo.listarTipos().then(
+        (respostaTipo) => {
+          this.tipos = respostaTipo
+        }
+      )
+    },
+    carregaCategorias(){
+      apiCategoria.listarCategorias().then(
+        (respostaCategoria) => {
+          this.categorias = respostaCategoria
+        }
+      )
+    },
+  
+    fecharEditarEventoDialog() {
+      this.$emit("fecharEditarEventoDialog")
+    },
+  
+    selecaoData(campo, valor) {
+      if (campo == 'dataInicio') {
+        this.evento.dataInicio = valor
+      } else if (campo == 'dataFim') {
+        this.evento.dataFim = valor
+      }
+    },
+    selecaoHora(campo, valor) {
+      if (campo == 'horaInicio') {
+        this.evento.horaInicio = valor
+      } else if (campo == 'horaFim') {
+        this.evento.horaFim = valor
       }
     },
   
-    created() {
-      this.carregaTipos()
-      this.carregaCategorias()
-    },
-  
-    methods: {
-      carregaTipos() {
-        apiTipo.listarTipos().then(
-          (respostaTipo) => {
-            this.tipos = respostaTipo
-          }
-        )
-      },
-      carregaCategorias(){
-        apiCategoria.listarCategorias().then(
-          (respostaCategoria) => {
-            this.categorias = respostaCategoria
-          }
-        )
-      },
-  
-      fecharEditarEventoDialog() {
-        this.$emit("fecharEditarEventoDialog")
-      },
-  
-      selecaoData(campo, valor) {
-        if (campo == 'dataInicio') {
-          this.evento.dataInicio = valor
-        } else if (campo == 'dataFim') {
-          this.evento.dataFim = valor
-        }
-      },
-      selecaoHora(campo, valor) {
-        if (campo == 'horaInicio') {
-          this.evento.horaInicio = valor
-        } else if (campo == 'horaFim') {
-          this.evento.horaFim = valor
-        }
-      },
-  
-      async handleImageUpload() {
+    async handleImageUpload() {
       if (this.selectedImage) {
         const file = this.selectedImage;
   
@@ -205,38 +205,37 @@
   
         reader.readAsDataURL(file);
       }
-      },
-  
-      salvarEvento(){
-        const eventoId = this.$route.params.eventoId
-        
-        this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
-        this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
-  
-        const evento = 
-        {
-          nome: this.evento.nome,
-          descricao: this.evento.descricao,
-          local: this.evento.local,
-          data_inicial: this.evento.dataInicio,
-          horaInicio: this.evento.horaInicio,
-          data_final: this.evento.dataFim,
-          horaFim : this.evento.horaFim,
-          tipo: this.evento.selectedTipo,
-          categoria: this.evento.selectedCategoria,
-          imagem: this.evento.base64Image,
-        }
-        console.log(evento)
-        apiEvento.editarEventos(eventoId, evento).then(response => {
-          console.log(response)
-          
-        })
-        .catch((error) => {
-          console.error(error)
-        })
-        this.$emit('fecharEditarEventoDialog');
-      }
     },
+  
+    salvarEvento(){
+      const eventoId = this.$route.params.eventoId
+        
+      this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
+      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
+      const evento = 
+      {
+        nome: this.evento.nome,
+        descricao: this.evento.descricao,
+        local: this.evento.local,
+        data_inicial: this.evento.dataInicio,
+        horaInicio: this.evento.horaInicio,
+        data_final: this.evento.dataFim,
+        horaFim : this.evento.horaFim,
+        id_tipo: this.evento.selectedTipo,
+        id_categoria: this.evento.selectedCategoria,
+        imagem: this.evento.base64Image,
+      }
+      console.log(evento)
+      apiEvento.editarEventos(eventoId, evento).then(response => {
+        console.log(response)
+          
+      })
+      .catch((error) => {
+        console.error(error)
+      })
+      this.$emit('fecharEditarEventoDialog');
+    }
+  },
   
     mounted(){
       const eventoId = this.$route.params.eventoId
@@ -255,7 +254,7 @@
           dataFim: eventoResponse.data_final,
           horaFim: eventoResponse.horaFim,
           selectedCategoria: eventoResponse.categoria,
-          base64Image: null
+          selectedImage: eventoResponse.base64Image
         };
         const dataInicioFormatted = moment(this.evento.dataInicio).format('YYYY-MM-DD')
         const dataFimFormatted = moment(this.evento.dataFim).format('YYYY-MM-DD')
@@ -272,6 +271,6 @@
   }
   </script>
   
-  
   <style>
+
   </style>

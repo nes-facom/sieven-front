@@ -228,7 +228,6 @@
 </template>
 
 <script>
-import axios from 'axios'
 import moment from 'moment'
 
 import editarEventoDialog from './components/editarEventoDialog.vue'
@@ -236,6 +235,7 @@ import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
 import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue' 
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
 import apiEvento from '../../api/resources/evento.js'
+import apiAtividade from '../../api/resources/atividade.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
 
 
@@ -324,25 +324,22 @@ export default {
       
     },
     carregarAtividade(eventoId) {
-      axios.get(`http://127.0.0.1/atividades/evento/${eventoId}`)
+      apiAtividade.visualizarAtividades(eventoId)
           .then(response => {
-            const responseData = response.data;
+            const responseData = response
             const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
 
-            this.atividades = responseData.map(atividade => ({
-              id: atividade.id,
-              nome: atividade.nome,
-              descricao: atividade.descricao,
-              local: atividade.local,
+            this.atividades = {
+              nome: responseData.nome,
+              descricao: responseData.descricao,
+              local: responseData.local,
               data: dataInicial,
-              horaInicio: moment(atividade.horaInicio).format('HH:mm'),
-              horaFim: moment(atividade.horaFim).format('HH:mm'),
-              palestrante: atividade.palestrante,
-              acessibilidade: atividade.acessibilidade,
+              horaInicio: moment(responseData.horaInicio).format('HH:mm'),
+              horaFim: moment(responseData.horaFim).format('HH:mm'),
+              palestrante: responseData.palestrante,
+              acessibilidade: responseData.acessibilidade,
               dialog: false
-            }));
-
-
+            }
           })
           .catch(error => {
             console.error(error);
@@ -370,8 +367,11 @@ export default {
   },
   created() {
     const eventoId = this.$route.params.eventoId
-    //this.carregarAtividade(eventoId)
     this.carregarEvento(eventoId)
+    apiAtividade.listarAtividades().then((response) => {
+      this.atividades = response
+    })
+    //this.carregarAtividade(eventoId)
   }
 }
 </script>

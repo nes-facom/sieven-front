@@ -131,7 +131,7 @@
           <v-btn style="color: white;"
                  color="#097FA8"
                  width="150"
-                 @click="adicionarAtividade">
+                 @click="adicionarEvento">
             {{ this.mensagemConfirmacao() }}
           </v-btn>
         </v-col>
@@ -141,7 +141,8 @@
 </template>
 
 <script>
- import axios from 'axios'
+
+import apiAtividade from '../../../api/resources/atividade.js'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
 
@@ -162,7 +163,7 @@ export default {
         horario_encerramento : null,
         palestrante: null,
         descricao: null,
-        modalidade: 'presencial',
+        modalidade: null,
         requisitos: [],
         situacao : 'Ativa',
         evento_id: 1
@@ -209,7 +210,7 @@ export default {
       }
     },
     adicionarAtividade() {
-      this.$emit('adicionarAtividade', this.atividade)
+      //this.$emit('adicionarAtividade', this.atividade)
     },
     adicionarEvento() {
       this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
@@ -223,12 +224,13 @@ export default {
       formData.append('horario_inicio',  this.atividade.horario_inicio);
       formData.append('horario_encerramento', this.atividade.horario_encerramento);
       formData.append('palestrante',  this.atividade.palestrante);
+      formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
       formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
       formData.append('evento_id', this.$route.params.eventoId);
       formData.append('situacao ', this.atividade.situacao);
 
 
-      axios.post(`http://127.0.0.1/atividades/`, formData)
+      apiAtividade.cadastrarAtividade(formData)
           .then( (response) => {
             console.log(response.data);
             window.location.reload();
