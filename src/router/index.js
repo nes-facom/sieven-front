@@ -42,7 +42,7 @@ const router = new VueRouter({
           }
       },
       {
-          path: '/evento/:id',
+          path: '/evento/:eventoId',
           name: 'evento',
           component: Evento,
           meta: {

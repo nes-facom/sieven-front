@@ -4,11 +4,8 @@
       <div>
         <v-row class="py-1">
           <v-col class="py-0">
-            <v-icon class="mr-1"
-                    size="26">
-              mdi-map-marker-outline
-            </v-icon>
-            {{ local }}
+            <v-icon class="mr-1" size="26">mdi-clock-outline</v-icon>
+            {{ horaInicio }} às {{ horaFim }}
           </v-col>
         </v-row>
         <v-row class="py-1">
@@ -24,9 +21,18 @@
           <v-col class="py-0">
             <v-icon class="mr-1"
                     size="26">
-              mdi-clock-outline
+              mdi-map-marker-outline
             </v-icon>
-            {{ horaInicio }} - {{ horaFim }}
+            {{ local }}
+          </v-col>
+        </v-row>
+        <v-row class="py-1">
+          <v-col class="py-0">
+            <v-icon class="mr-1"
+                    size="26">
+              mdi-map-marker-outline
+            </v-icon>
+            {{ tipo }}
           </v-col>
         </v-row>
         <v-row class="py-1">
@@ -44,6 +50,7 @@
 </template>
 
 <script>
+
 export default {
   name: "pgDadosEventoIndex",
   props: {
@@ -64,11 +71,23 @@ export default {
     },
     categoria: {
       required: true
+    },
+    tipo: {
+      required: true
     }
   }
 }
 </script>
 
 <style>
+
+#pgDadosEvento{
+  position: relative;
+  margin-top: 40px;
+  margin-bottom: 70px;
+  margin-right: 76%;
+  
+
+}
 
 </style>
