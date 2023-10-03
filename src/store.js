@@ -5,19 +5,27 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    isAdmin: false, // Inicialmente, o usuário não é um administrador
+    isAdmin: false,
+    passport: null, // Novo estado para armazenar o passaporte do usuário
   },
   mutations: {
-    setIsAdmin(state, isAdmin) {
+    setAdminStatus(state, isAdmin) {
       state.isAdmin = isAdmin;
+    },
+    setPassport(state, passport) {
+      state.passport = passport;
     },
   },
   actions: {
-    setAdminStatus({ commit }, isAdmin) {
-      commit('setIsAdmin', isAdmin);
+    updateAdminStatus({ commit }, isAdmin) {
+      commit('setAdminStatus', isAdmin);
+    },
+    updatePassport({ commit }, passport) {
+      commit('setPassport', passport);
     },
   },
   getters: {
     isAdmin: (state) => state.isAdmin,
+    getPassport: (state) => state.passport,
   },
 });

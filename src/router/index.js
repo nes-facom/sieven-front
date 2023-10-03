@@ -22,7 +22,7 @@ const router = new VueRouter({
           name: 'registro',
           component: Registro,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
       {
@@ -30,7 +30,7 @@ const router = new VueRouter({
           name: 'eventos',
           component: Eventos,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
       {
@@ -38,7 +38,7 @@ const router = new VueRouter({
           name: 'inscricoes',
           component: Inscricoes,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
       {
@@ -46,7 +46,7 @@ const router = new VueRouter({
           name: 'evento',
           component: Evento,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
       {
@@ -54,7 +54,7 @@ const router = new VueRouter({
           name: 'validador',
           component: Validador,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
       {
@@ -62,7 +62,7 @@ const router = new VueRouter({
           name: 'admin',
           component: Admin,
           meta: {
-            isAuthenticated: true
+            isAuthenticated: false
           }
       },
     ]
@@ -85,7 +85,7 @@ const router = new VueRouter({
             if (retorno.status == 200) {
               console.log('to admin route')
               const isAdmin = true;
-              store.dispatch('setAdminStatus', isAdmin);
+              store.dispatch('updateAdminStatus', isAdmin);
               next();
               //console.log('retornou 200')
             } else if (retorno.status == 404){
@@ -99,7 +99,8 @@ const router = new VueRouter({
         console.log('debug')
       }
     } else {
-      
+      const isAdmin = true;
+      store.dispatch('updateAdminStatus', isAdmin);
       next()
     }
   })
