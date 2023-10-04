@@ -193,7 +193,8 @@
                             :hora-inicio="atividade.horaInicio"
                             :data="atividade.data"
                             :local="atividade.local"
-                            :acessibilidade="atividade.acessibilidade"
+                            :numero-participantes="atividade.numeroParticipantes"
+                            :modalidade="atividade.modalidade"
                             :descricao="atividade.descricao"
                             :nome="atividade.nome"
                             @fecharAtividadeDialog="fecharAtividadeDialog">
@@ -228,7 +229,7 @@
 </template>
 
 <script>
-import moment from 'moment'
+//import moment from 'moment'
 
 import editarEventoDialog from './components/editarEventoDialog.vue'
 import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
@@ -324,27 +325,28 @@ export default {
       
     },
     carregarAtividade(eventoId) {
-      apiAtividade.visualizarAtividades(eventoId)
+      apiAtividade.listarAtividades(eventoId)
           .then(response => {
-            const responseData = response
-            const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
+           this.atividades = response
+           // const responseData = response
+           // const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
 
-            this.atividades = {
-              nome: responseData.nome,
-              descricao: responseData.descricao,
-              local: responseData.local,
-              data: dataInicial,
-              horaInicio: moment(responseData.horaInicio).format('HH:mm'),
-              horaFim: moment(responseData.horaFim).format('HH:mm'),
-              palestrante: responseData.palestrante,
-              acessibilidade: responseData.acessibilidade,
-              dialog: false
-            }
+            //this.atividades = {
+             // nome: responseData.nome,
+             // descricao: responseData.descricao,
+             // local: responseData.local,
+             // data: dataInicial,
+             // horaInicio: moment(responseData.horaInicio).format('HH:mm'),
+             // horaFim: moment(responseData.horaFim).format('HH:mm'),
+             // palestrante: responseData.palestrante,
+             // modalidade: responseData.modalidade,
+             // dialog: false
+           // }
           })
           .catch(error => {
             console.error(error);
           });
-    },
+      },
     adicionarAtividade(atividade) {
       // Disparar AXIOS
       console.log(atividade)
@@ -357,9 +359,18 @@ export default {
       this.atividades[atividadeId - 1].editarDialog = false
     },
     excluirAtividade(atividadeId) {
-      this.atividades[atividadeId - 1].excluirDialog = false
+      
       // Disparar AXIOS
-      console.log(atividadeId)
+      apiAtividade.deletarAtividade(atividadeId)
+      .then(response =>{
+        console.log('Atividade excluída com sucesso', response)
+        this.atividades[atividadeId - 1].excluirDialog = false;
+    })
+    .catch(error => {
+        console.error('Erro ao excluir evento', error)
+        this.atividades[atividadeId - 1].excluirDialog = false;
+        
+      })
     },
     cancelarExcluirAtividade(atividadeId) {
       this.atividades[atividadeId - 1].excluirDialog = false
@@ -368,10 +379,9 @@ export default {
   created() {
     const eventoId = this.$route.params.eventoId
     this.carregarEvento(eventoId)
-    apiAtividade.listarAtividades().then((response) => {
-      this.atividades = response
-    })
-    //this.carregarAtividade(eventoId)
+    //if (this.atividade && this.atividade.id){
+      this.carregarAtividade(eventoId)
+    //}
   }
 }
 </script>

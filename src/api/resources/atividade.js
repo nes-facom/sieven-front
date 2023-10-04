@@ -16,11 +16,11 @@ const atividadeResource =
         })
     },
 
-    listarAtividades()
+    listarAtividades(eventoId)
     {
         return new Promise( (resolve) =>
         {
-            apiUsuario.get(`/atividade`, ).then( (res) =>
+            apiUsuario.get(`/atividade/${eventoId}`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>

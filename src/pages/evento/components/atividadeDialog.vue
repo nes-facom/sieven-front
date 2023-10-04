@@ -15,9 +15,9 @@
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
         <span class="font-weight-bold">
-          Acessibilidade:
+          Modalidade:
         </span>
-        {{ acessibilidade }}
+        {{ modalidade }}
       </v-card-subtitle>
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
@@ -27,6 +27,15 @@
 
         {{ local }}
       </v-card-subtitle>
+      <v-card-subtitle class="py-2 text-justify"
+                       style="color: #8B8B8B">
+        <span class="font-weight-bold">
+          numeroParticipantes:
+        </span>
+
+        {{ numeroParticipantes }}
+      </v-card-subtitle>
+      
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
             <span class="font-weight-bold">
@@ -77,8 +86,11 @@ export default {
     descricao: {
       required: true
     },
-    acessibilidade : {
+    modalidade : {
       required: true
+    },
+    numeroParticipantes:{
+      required:true
     },
     local: {
       required: true

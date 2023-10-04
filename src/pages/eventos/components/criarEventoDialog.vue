@@ -225,7 +225,7 @@ export default {
       apiEvento.cadastrarEvento(evento).then( () => {
         console.log(evento)
       })
-      
+      this.$emit("fecharCriarEventoDialog")
     }
   }
 }

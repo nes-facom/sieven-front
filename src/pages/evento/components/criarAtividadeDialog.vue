@@ -88,10 +88,14 @@
           </v-text-field>
           <v-textarea label="Descrição"
                       v-model="atividade.descricao"
-                      height="142"
                       auto-grow
-                      outlined>
+                      maxLength="255"
+                      outlined
+                      @input="limitarDescricao">
           </v-textarea>
+          <span class="char-count">
+            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
+          </span>
           <v-text-field label="Requisitos"
                         v-model="requisitoTexto"
                         @keydown.enter="adicionarRequisito"
@@ -166,7 +170,7 @@ export default {
         modalidade: null,
         requisitos: [],
         situacao : 'Ativa',
-        evento_id: 1
+        evento_id: null
       },
       requisitoTexto: null
     }
@@ -210,7 +214,11 @@ export default {
       }
     },
     adicionarAtividade() {
-      //this.$emit('adicionarAtividade', this.atividade)
+      if (this.atividade.descricao.length > 250) {
+        alert('A descrição não pode ter mais de 250 caracteres.');
+      } else {
+        this.$emit('adicionarAtividade', this.atividade);
+  }
     },
     adicionarEvento() {
       this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
@@ -238,7 +246,12 @@ export default {
           .catch(error => {
             console.error(error);
           });
-    }
+    },
+    limitarDescricao() {
+    if (this.atividade.descricao && this.atividade.descricao.length > 255) {
+      this.atividade.descricao = this.atividade.descricao.slice(0, 255);
+      }
+    },
   },
   props: {
     editar: {
