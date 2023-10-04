@@ -1,94 +1,33 @@
+
 <template>
-  <div id="pgPaginaInicial">
-    <v-row class="pt-8">
-      <v-col class="d-flex justify-center">
-        <v-card class="pb-12"
-                width="90%">
-          <v-row justify="center">
-            <v-card-title class="mt-8 mb-4 text-h3 font-weight-bold"
-                          style="color: #0088B7">
-              Oque é o SIEVEN?
-            </v-card-title>
-          </v-row>
-
-          <v-card-text class="pa-4 text-justify text-subtitle-1">
-            
-          </v-card-text>
-
-          <div>
-            <v-card v-for="item in sieven"
-                    :key="item.id"
-                    class="mb-10 mt-3 pa-2 d-flex align-center justify-end rounded-0 text-h3 font-weight-bold"
-                    color="#0088B7"
-                    :width="item.tamanho"
-                    flat>
-              <v-icon class="mr-4"
-                      size="60"
-                      color="white">
-                {{ item.icone }}
-              </v-icon>
-              <span class="mr-2"
-                    style="color: white">
-                {{ item.titulo }}
-              </span>
+  <v-sheet class="mx-auto" max-width=100vh>
+    <v-slide-group show-arrows>
+      <v-slide-group-item v-for="n in 10" :key="n">
+        <v-row>
+          <v-col cols="6">
+            <v-img
+              class="justify-end text-white"
+              height="300"
+              width="50vh"
+              src="https://cbsoft2023.ufms.br/images/logos/cbsoft2023-horizontal-menor.png"
+              cover
+            ></v-img>
+          </v-col>
+          <v-col cols="6">
+            <v-card class="mx-auto" max-width="50vh" height="300">
+              <v-card-subtitle class="pt-3"> Congresso Brasileiro de Software</v-card-subtitle> <!-- pegar infos do backend -->
+              <v-card-text>
+                <div>O Congresso Brasileiro de Software: Teoria e Prática (CBSoft) é um evento realizado anualmente pela Sociedade Brasileira de Computação (SBC) com o objetivo de promover e incentivar a troca de experiências entre pesquisadores e profissionais da indústria e academia sobre as mais recentes pesquisas, tendências e inovações práticas e teóricas sobre software</div>
+              </v-card-text>
+              <v-card-actions>
+                <v-btn color="blue" depressed elevation="6"> SAIBA MAIS </v-btn>
+              </v-card-actions>
             </v-card>
-          </div>
-        </v-card>
-      </v-col>
-
-      <v-col class="d-flex justify-center">
-        <v-card class="pb-16"
-                width="90%">
-          <v-row justify="center">
-            <v-card-title class="mt-8 mb-4 text-h3 font-weight-bold"
-                          style="color: #0088B7">
-              Parceiros
-            </v-card-title>
-          </v-row>
-
-          <v-row justify="center">
-            <v-col>
-              <v-img :src="require('../../assets/agetic_logo.png')"
-                     class="ml-auto mr-auto"
-                     width="65%"
-                     @click="redirecionarAgetic">
-              </v-img>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col >
-              <v-img :src="require('../../assets/ufms_logo.png')"   
-                     class="ml-auto"
-                     width="60%"
-                     @click="redirecionarUfms">
-              </v-img>
-            </v-col>
-            <v-col>
-              <v-row>
-                <v-col>
-                  <v-img :src="require('../../assets/facom_logo.png')"
-                         class="ml-14"
-                         width="40%"
-                         @click="redirecionarFacom">
-                  </v-img>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-img :src="require('../../assets/nucleo_logo.png')"
-                         class="ml-16"
-                         width="35%"
-                         @click="redirecionarNes">
-                  </v-img>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-card>
-      </v-col>
-    </v-row>
-  </div>
+          </v-col>
+        </v-row>
+      </v-slide-group-item>
+    </v-slide-group>
+  </v-sheet>
 </template>
 
 <script>
