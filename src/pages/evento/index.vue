@@ -33,7 +33,7 @@
             </v-card>
           </v-dialog>
 
-          <v-dialog v-if="this.$store.getters.isEditor"
+          <v-dialog v-if="this.$store.getters.isAdmin"
                           v-model="editarEventoDialog"
                           width="1000">
           <template v-slot:activator="{on, attrs}">
@@ -237,6 +237,7 @@ import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
 import apiEvento from '../../api/resources/evento.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
+//import store from '@/store';
 
 
 export default {

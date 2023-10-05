@@ -22,7 +22,7 @@ const router = new VueRouter({
           name: 'registro',
           component: Registro,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
       {
@@ -38,15 +38,15 @@ const router = new VueRouter({
           name: 'inscricoes',
           component: Inscricoes,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
       {
-          path: '/evento/:eventoId',
+          path: '/evento/:id',
           name: 'evento',
           component: Evento,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
       {
@@ -54,7 +54,7 @@ const router = new VueRouter({
           name: 'validador',
           component: Validador,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
       {
@@ -62,7 +62,7 @@ const router = new VueRouter({
           name: 'admin',
           component: Admin,
           meta: {
-            isAuthenticated: false
+            isAuthenticated: true
           }
       },
     ]
@@ -70,44 +70,39 @@ const router = new VueRouter({
 
 
   router.beforeEach((to, from, next) => {
+    
     if (to.meta.isAuthenticated) {
-      Vue.$keycloak.authenticated  = true
-
-      // Get the actual url of the app, it's needed for Keycloak
-      //const basePath = window.location.toString()
+      Vue.$keycloak.authenticated = true
+      const basePath = window.location.toString()
       if (!Vue.$keycloak.authenticated) {
-        // The page is protected and the user is not authenticated. Force a login.
-        //Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
-        console.log('vish kk')
-        next()
-      }
-      else {
-        console.log('caiu no else')
+        Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
+      } else {
+        const adminPass = 'brunno.lewin'
         try {
-          const adminPass = 'brunno.lewin' 
+          //Vue.$keycloak.idTokenParsed.preferred_username
           apiAdministrador.verificarAdmin(adminPass).then( (retorno) =>  {
-            console.log(retorno)
+            console.log(">:D")
             if (retorno.status == 200) {
-              console.log('to admin route')
               const isAdmin = true;
+              console.log('rarwarawrawr')
               store.dispatch('updateAdminStatus', isAdmin);
-              store.dispatch('updatePassport', adminPass)
               next();
-              //console.log('retornou 200')
             } else if (retorno.status == 404){
-              //console.log('Não foi possível encontrar tal administrador')
+              next()
             }
           }) 
         } catch (error) {
-          console.log(error)
+          next()
+          //console.loge(error)
         }
-
-        console.log('debug')
+        next()
       }
     } else {
-      // const isAdmin = true;
-      // store.dispatch('updateAdminStatus', isAdmin);
       next()
+    }
+
+    if (to.path === '/' && Vue.$keycloak.authenticated) {
+      next('/eventos');
     }
   })
 
