@@ -224,24 +224,35 @@ export default {
       this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
       this.atividade.horario_encerramento = `${this.atividade.dataFim} ${this.atividade.horaFim}`;
 
-      const formData = new FormData();
+      //const formData = new FormData();
 
-      formData.append('nome', this.atividade.nome);
-      formData.append('descricao',  this.atividade.descricao);
-      formData.append('local',  this.atividade.local);
+      //formData.append('nome', this.atividade.nome);
+      //formData.append('descricao',  this.atividade.descricao);
+      /*formData.append('local',  this.atividade.local);
       formData.append('horario_inicio',  this.atividade.horario_inicio);
       formData.append('horario_encerramento', this.atividade.horario_encerramento);
       formData.append('palestrante',  this.atividade.palestrante);
       formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
       formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
       formData.append('evento_id', this.$route.params.eventoId);
-      formData.append('situacao ', this.atividade.situacao);
+      formData.append('situacao ', this.atividade.situacao);*/
+      const atividade = {
+        nome: this.atividade.nome,
+        descricao: this.atividade.descricao,
+        local: this.atividade.local,
+        horario_inicio: this.atividade.horario_inicio,
+        horario_encerramento: this.atividade.horario_encerramento,
+        palestrante: this.atividade.palestrante,
+        id_modalidade: this.atividade.id_modalidade,
+        numeroParticipantes: this.atividade.numeroParticipantes,
+        evento_id: this.$route.params.eventoId,
+        situacao: this.atividade.situacao
+      }
 
 
-      apiAtividade.cadastrarAtividade(formData)
+      apiAtividade.cadastrarAtividade(atividade)
           .then( (response) => {
-            console.log(response.data);
-            window.location.reload();
+            console.log(atividade);
           })
           .catch(error => {
             console.error(error);

@@ -188,13 +188,14 @@
             </v-card>
           </template>
 
-          <atividade-dialog :id="atividade.id"
+          <atividade-dialog 
+                            :id="atividade.id"
                             :hora-fim="atividade.horaFim"
                             :hora-inicio="atividade.horaInicio"
                             :data="atividade.data"
                             :local="atividade.local"
-                            :numero-participantes="atividade.numeroParticipantes"
-                            :modalidade="atividade.modalidade"
+                            :numeroParticipantes="atividade.numeroParticipantes"
+                            :id_modalidade="atividade.id_modalidade"
                             :descricao="atividade.descricao"
                             :nome="atividade.nome"
                             @fecharAtividadeDialog="fecharAtividadeDialog">
@@ -250,7 +251,7 @@ export default {
     ],
       criarAtividadeDialog: false,
       editarEventoDialog:false,
-      excluirDialogConfirmacao: false
+      excluirDialogConfirmacao: false,
     }
   },
   methods: {
@@ -270,8 +271,11 @@ export default {
     cancelarEventoExclusao(){
       this.excluirDialogConfirmacao = false;
     },
+    //abrirAtividadeDialog(atividadeId){
+      //this.atividades[atividadeId].dialog = true
+    //},
     fecharAtividadeDialog(atividadeId) {
-      this.atividades[atividadeId - 1].dialog = false
+      this.atividades[atividadeId].dialog = false
     },
     fecharEditarEventoDialog(){
       this.editarEventoDialog = false

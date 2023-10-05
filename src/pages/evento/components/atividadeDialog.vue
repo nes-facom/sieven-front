@@ -17,7 +17,7 @@
         <span class="font-weight-bold">
           Modalidade:
         </span>
-        {{ modalidade }}
+        {{ getModalidadeText(id_modalidade) }}
       </v-card-subtitle>
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
@@ -65,7 +65,7 @@
         </v-col>
       </v-row>
     </v-card>
-  </div>
+</div>
 </template>
 
 <script >
@@ -73,8 +73,11 @@ export default {
   name: "atividadeDialog",
   methods: {
     fecharAtividadeDialog() {
-      this.$emit('fecharAtividadeDialog', this.id)
-    }
+      this.$emit('fecharAtividadeDialog', this.atividade.id)
+    },
+    getModalidadeText(id) {
+      return id === 1 ? 'Presencial' : (id === 2 ? 'Remoto' : '');
+    },
   },
   props: {
     id: {
@@ -86,7 +89,7 @@ export default {
     descricao: {
       required: true
     },
-    modalidade : {
+    id_modalidade : {
       required: true
     },
     numeroParticipantes:{
