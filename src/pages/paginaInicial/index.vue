@@ -35,7 +35,28 @@
         </v-row>
       </v-carousel-item>
     </v-carousel>
+    MAIS EVENTOS
+    <v-footer color="black" app>
+    <v-container>
+      <v-layout align-center justify-center>
+        <v-tooltip bottom>
+          <template v-slot:activator="{ on, attrs }">
+            <img
+              src="@/assets/home/nes.png"
+              alt="NES - Núcleo de Práticas de Software"
+              style="width: 39px; height: 45px;"
+              v-bind="attrs"
+              v-on="on"
+            />
+          </template>
+          <span>Texto flutuante</span>
+        </v-tooltip>
+        <img src="@/assets/home/nes.png" alt="Imagem Aleatória"  style="width: 39px; height: 45px;"/>
+      </v-layout>
+    </v-container>
+  </v-footer>
   </v-sheet>
+  
 </template>
 
 <script>
