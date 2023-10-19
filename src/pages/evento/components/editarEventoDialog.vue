@@ -115,7 +115,6 @@
   
 <script>
   
-import moment from 'moment';
 import apiTipo from '../../../api/resources/tipo.js'
 import apiCategoria from '../../../api/resources/categoria.js'
 import apiEvento from '../../../api/resources/evento.js'
@@ -134,12 +133,16 @@ export default{
         local: null,
         dataInicio: null,
         horaInicio: null,
+        horario_inicio: null,
+        horario_encerramento:null,
         dataFim: null,
         horaFim: null,
         categoria: null,
         base64Image: null,
+        eventId: null,
   
       },
+  
       selectedImage: null,
       tipos: [],
       selectedTipo: null,
@@ -173,6 +176,40 @@ export default{
         }
       )
     },
+    carregarEventoData(eventId){
+      apiEvento.visualizarEventos(eventId).
+      then(response => {
+        const eventoResponse = response
+        const dataInicial = new Date(eventoResponse.data_inicial);
+        const horaInicial = dataInicial.toLocaleTimeString();
+        const dataInicialFormatada = dataInicial.toLocaleDateString();
+
+        const dataFinal = new Date(eventoResponse.data_final);
+        const horaFinal = dataFinal.toLocaleTimeString();
+        const dataFinalFormatada = dataFinal.toLocaleDateString();
+
+        this.evento = {
+          nome: eventoResponse.nome,
+          descricao: eventoResponse.descricao,
+          selectedTipo: eventoResponse.tipo,
+          local: eventoResponse.local,
+          dataInicio: dataInicialFormatada,
+          horaInicio: horaInicial,
+          dataFim: dataFinalFormatada,
+          horaFim: horaFinal,
+          selectedCategoria: eventoResponse.categoria,
+          selectedImage: eventoResponse.base64Image
+        }
+      
+        console.log(this.evento.dataInicio)
+        console.log(this.evento.dataFim)
+        console.log(this.evento.horaInicio)
+        console.log(this.evento.horaFim)
+      })
+      .catch(error => {
+        console.log(eventId, error)
+      })    
+    },
   
     fecharEditarEventoDialog() {
       this.$emit("fecharEditarEventoDialog")
@@ -180,7 +217,7 @@ export default{
   
     selecaoData(campo, valor) {
       if (campo == 'dataInicio') {
-        this.evento.dataInicio = valor
+       this.evento.dataInicio = valor
       } else if (campo == 'dataFim') {
         this.evento.dataFim = valor
       }
@@ -216,13 +253,11 @@ export default{
       {
         nome: this.evento.nome,
         descricao: this.evento.descricao,
-        local: this.evento.local,
-        data_inicial: this.evento.dataInicio,
-        horaInicio: this.evento.horaInicio,
-        data_final: this.evento.dataFim,
-        horaFim : this.evento.horaFim,
-        id_tipo: this.evento.selectedTipo,
         id_categoria: this.evento.selectedCategoria,
+        id_tipo: this.evento.selectedTipo,
+        local: this.evento.local,
+        data_inicial: this.evento.horario_inicio,
+        data_final: this.evento.horario_encerramento,
         imagem: this.evento.base64Image,
       }
       console.log(evento)
@@ -238,35 +273,10 @@ export default{
   },
   
     mounted(){
-      const eventoId = this.$route.params.eventoId
-      apiEvento.visualizarEventos(eventoId)
-      .then(response => {
-        const eventoResponse = response
-  
-  
-        this.evento = {
-          nome: eventoResponse.nome,
-          descricao: eventoResponse.descricao,
-          selectedTipo: eventoResponse.tipo,
-          local: eventoResponse.local,
-          dataInicio: eventoResponse.data_inicial,
-          horaInicio: eventoResponse.horaInicio,
-          dataFim: eventoResponse.data_final,
-          horaFim: eventoResponse.horaFim,
-          selectedCategoria: eventoResponse.categoria,
-          selectedImage: eventoResponse.base64Image
-        };
-        const dataInicioFormatted = moment(this.evento.dataInicio).format('YYYY-MM-DD')
-        const dataFimFormatted = moment(this.evento.dataFim).format('YYYY-MM-DD')
-        this.evento.dataInicio = dataInicioFormatted
-        this.evento.dataFim = dataFimFormatted
-  
-        
-  
-      })
-        .catch(error => {
-        console.log(eventoId, error);
-      });
+      this.eventId = this.$route.params.eventoId
+      if(this.eventId){
+        this.carregarEventoData(this.eventId)
+      }
     }
   }
   </script>

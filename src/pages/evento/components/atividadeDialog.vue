@@ -30,10 +30,10 @@
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
         <span class="font-weight-bold">
-          numeroParticipantes:
+          Numero de Vagas:
         </span>
 
-        {{ numeroParticipantes }}
+        {{ quantidade_vagas }}
       </v-card-subtitle>
       
       <v-card-subtitle class="py-2 text-justify"
@@ -73,7 +73,9 @@ export default {
   name: "atividadeDialog",
   methods: {
     fecharAtividadeDialog() {
+      console.log(this.atividade.id)
       this.$emit('fecharAtividadeDialog', this.atividade.id)
+      
     },
     getModalidadeText(id) {
       return id === 1 ? 'Presencial' : (id === 2 ? 'Remoto' : '');
@@ -92,7 +94,7 @@ export default {
     id_modalidade : {
       required: true
     },
-    numeroParticipantes:{
+    quantidade_vagas:{
       required:true
     },
     local: {

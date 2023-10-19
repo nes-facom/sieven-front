@@ -194,7 +194,7 @@
                             :hora-inicio="atividade.horaInicio"
                             :data="atividade.data"
                             :local="atividade.local"
-                            :numeroParticipantes="atividade.numeroParticipantes"
+                            :quantidade_vagas="atividade.quantidade_vagas"
                             :id_modalidade="atividade.id_modalidade"
                             :descricao="atividade.descricao"
                             :nome="atividade.nome"
@@ -252,6 +252,7 @@ export default {
       criarAtividadeDialog: false,
       editarEventoDialog:false,
       excluirDialogConfirmacao: false,
+      excluirAtividadeDialog: false,
     }
   },
   methods: {
@@ -275,7 +276,7 @@ export default {
       //this.atividades[atividadeId].dialog = true
     //},
     fecharAtividadeDialog(atividadeId) {
-      this.atividades[atividadeId].dialog = false
+      this.atividades[atividadeId - 1].dialog = false
     },
     fecharEditarEventoDialog(){
       this.editarEventoDialog = false
@@ -368,16 +369,16 @@ export default {
       apiAtividade.deletarAtividade(atividadeId)
       .then(response =>{
         console.log('Atividade excluída com sucesso', response)
-        this.atividades[atividadeId - 1].excluirDialog = false;
+        this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
     })
     .catch(error => {
         console.error('Erro ao excluir evento', error)
-        this.atividades[atividadeId - 1].excluirDialog = false;
+        this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
         
       })
     },
     cancelarExcluirAtividade(atividadeId) {
-      this.atividades[atividadeId - 1].excluirDialog = false
+      this.atividades[atividadeId - 1].excluirAtividadeDialog = false
     }
   },
   created() {

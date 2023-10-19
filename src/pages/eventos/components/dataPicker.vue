@@ -7,7 +7,8 @@
             offset-y
             min-width="auto">
       <template v-slot:activator="{ on, attrs }">
-        <v-text-field v-model="data"
+        <v-text-field v-model="data
+        "
                       :label="label"
                       prepend-icon="mdi-calendar"
                       readonly
@@ -24,6 +25,7 @@
 </template>
 
 <script>
+
 export default {
   name: "pgDataPickerIndex",
   data() {
