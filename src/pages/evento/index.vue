@@ -188,12 +188,14 @@
             </v-card>
           </template>
 
-          <atividade-dialog :id="atividade.id"
+          <atividade-dialog 
+                            :id="atividade.id"
                             :hora-fim="atividade.horaFim"
                             :hora-inicio="atividade.horaInicio"
                             :data="atividade.data"
                             :local="atividade.local"
-                            :acessibilidade="atividade.acessibilidade"
+                            :quantidade_vagas="atividade.quantidade_vagas"
+                            :id_modalidade="atividade.id_modalidade"
                             :descricao="atividade.descricao"
                             :nome="atividade.nome"
                             @fecharAtividadeDialog="fecharAtividadeDialog">
@@ -228,14 +230,14 @@
 </template>
 
 <script>
-import axios from 'axios'
-import moment from 'moment'
+//import moment from 'moment'
 
 import editarEventoDialog from './components/editarEventoDialog.vue'
 import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
 import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue' 
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
 import apiEvento from '../../api/resources/evento.js'
+import apiAtividade from '../../api/resources/atividade.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
 //import store from '@/store';
 
@@ -250,7 +252,8 @@ export default {
     ],
       criarAtividadeDialog: false,
       editarEventoDialog:false,
-      excluirDialogConfirmacao: false
+      excluirDialogConfirmacao: false,
+      excluirAtividadeDialog: false,
     }
   },
   methods: {
@@ -270,6 +273,9 @@ export default {
     cancelarEventoExclusao(){
       this.excluirDialogConfirmacao = false;
     },
+    //abrirAtividadeDialog(atividadeId){
+      //this.atividades[atividadeId].dialog = true
+    //},
     fecharAtividadeDialog(atividadeId) {
       this.atividades[atividadeId - 1].dialog = false
     },
@@ -325,30 +331,28 @@ export default {
       
     },
     carregarAtividade(eventoId) {
-      axios.get(`http://127.0.0.1/atividades/evento/${eventoId}`)
+      apiAtividade.listarAtividades(eventoId)
           .then(response => {
-            const responseData = response.data;
-            const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
+           this.atividades = response
+           // const responseData = response
+           // const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
 
-            this.atividades = responseData.map(atividade => ({
-              id: atividade.id,
-              nome: atividade.nome,
-              descricao: atividade.descricao,
-              local: atividade.local,
-              data: dataInicial,
-              horaInicio: moment(atividade.horaInicio).format('HH:mm'),
-              horaFim: moment(atividade.horaFim).format('HH:mm'),
-              palestrante: atividade.palestrante,
-              acessibilidade: atividade.acessibilidade,
-              dialog: false
-            }));
-
-
+            //this.atividades = {
+             // nome: responseData.nome,
+             // descricao: responseData.descricao,
+             // local: responseData.local,
+             // data: dataInicial,
+             // horaInicio: moment(responseData.horaInicio).format('HH:mm'),
+             // horaFim: moment(responseData.horaFim).format('HH:mm'),
+             // palestrante: responseData.palestrante,
+             // modalidade: responseData.modalidade,
+             // dialog: false
+           // }
           })
           .catch(error => {
             console.error(error);
           });
-    },
+      },
     adicionarAtividade(atividade) {
       // Disparar AXIOS
       console.log(atividade)
@@ -361,18 +365,29 @@ export default {
       this.atividades[atividadeId - 1].editarDialog = false
     },
     excluirAtividade(atividadeId) {
-      this.atividades[atividadeId - 1].excluirDialog = false
+      
       // Disparar AXIOS
-      console.log(atividadeId)
+      apiAtividade.deletarAtividade(atividadeId)
+      .then(response =>{
+        console.log('Atividade excluída com sucesso', response)
+        this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
+    })
+    .catch(error => {
+        console.error('Erro ao excluir evento', error)
+        this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
+        
+      })
     },
     cancelarExcluirAtividade(atividadeId) {
-      this.atividades[atividadeId - 1].excluirDialog = false
+      this.atividades[atividadeId - 1].excluirAtividadeDialog = false
     }
   },
   created() {
     const eventoId = this.$route.params.eventoId
-    //this.carregarAtividade(eventoId)
     this.carregarEvento(eventoId)
+    //if (this.atividade && this.atividade.id){
+      this.carregarAtividade(eventoId)
+    //}
   }
 }
 </script>

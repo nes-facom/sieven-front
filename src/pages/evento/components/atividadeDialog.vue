@@ -15,9 +15,9 @@
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
         <span class="font-weight-bold">
-          Acessibilidade:
+          Modalidade:
         </span>
-        {{ acessibilidade }}
+        {{ getModalidadeText(id_modalidade) }}
       </v-card-subtitle>
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
@@ -27,6 +27,15 @@
 
         {{ local }}
       </v-card-subtitle>
+      <v-card-subtitle class="py-2 text-justify"
+                       style="color: #8B8B8B">
+        <span class="font-weight-bold">
+          Numero de Vagas:
+        </span>
+
+        {{ quantidade_vagas }}
+      </v-card-subtitle>
+      
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
             <span class="font-weight-bold">
@@ -56,7 +65,7 @@
         </v-col>
       </v-row>
     </v-card>
-  </div>
+</div>
 </template>
 
 <script >
@@ -64,8 +73,13 @@ export default {
   name: "atividadeDialog",
   methods: {
     fecharAtividadeDialog() {
-      this.$emit('fecharAtividadeDialog', this.id)
-    }
+      console.log(this.atividade.id)
+      this.$emit('fecharAtividadeDialog', this.atividade.id)
+      
+    },
+    getModalidadeText(id) {
+      return id === 1 ? 'Presencial' : (id === 2 ? 'Remoto' : '');
+    },
   },
   props: {
     id: {
@@ -77,8 +91,11 @@ export default {
     descricao: {
       required: true
     },
-    acessibilidade : {
+    id_modalidade : {
       required: true
+    },
+    quantidade_vagas:{
+      required:true
     },
     local: {
       required: true

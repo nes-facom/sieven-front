@@ -88,10 +88,14 @@
           </v-text-field>
           <v-textarea label="Descrição"
                       v-model="atividade.descricao"
-                      height="142"
                       auto-grow
-                      outlined>
+                      maxLength="255"
+                      outlined
+                      @input="limitarDescricao">
           </v-textarea>
+          <span class="char-count">
+            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
+          </span>
           <v-text-field label="Requisitos"
                         v-model="requisitoTexto"
                         @keydown.enter="adicionarRequisito"
@@ -131,7 +135,7 @@
           <v-btn style="color: white;"
                  color="#097FA8"
                  width="150"
-                 @click="adicionarAtividade">
+                 @click="adicionarEvento">
             {{ this.mensagemConfirmacao() }}
           </v-btn>
         </v-col>
@@ -141,7 +145,8 @@
 </template>
 
 <script>
- import axios from 'axios'
+
+import apiAtividade from '../../../api/resources/atividade.js'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
 
@@ -162,10 +167,10 @@ export default {
         horario_encerramento : null,
         palestrante: null,
         descricao: null,
-        modalidade: 'presencial',
+        modalidade: null,
         requisitos: [],
         situacao : 'Ativa',
-        evento_id: 1
+        evento_id: null
       },
       requisitoTexto: null
     }
@@ -209,7 +214,11 @@ export default {
       }
     },
     adicionarAtividade() {
-      this.$emit('adicionarAtividade', this.atividade)
+      if (this.atividade.descricao.length > 250) {
+        alert('A descrição não pode ter mais de 250 caracteres.');
+      } else {
+        this.$emit('adicionarAtividade', this.atividade);
+  }
     },
     adicionarEvento() {
       this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
@@ -223,20 +232,37 @@ export default {
       formData.append('horario_inicio',  this.atividade.horario_inicio);
       formData.append('horario_encerramento', this.atividade.horario_encerramento);
       formData.append('palestrante',  this.atividade.palestrante);
+      formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
       formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
       formData.append('evento_id', this.$route.params.eventoId);
       formData.append('situacao ', this.atividade.situacao);
+     /* const atividade = {
+        nome: this.atividade.nome,
+        descricao: this.atividade.descricao,
+        local: this.atividade.local,
+        horario_inicio: this.atividade.horario_inicio,
+        horario_encerramento: this.atividade.horario_encerramento,
+        palestrante: this.atividade.palestrante,
+        id_modalidade: this.atividade.id_modalidade,
+        numeroParticipantes: this.atividade.numeroParticipantes,
+        evento_id: this.$route.params.eventoId,
+        situacao: this.atividade.situacao
+      }*/
 
 
-      axios.post(`http://127.0.0.1/atividades/`, formData)
+      apiAtividade.cadastrarAtividade(formData)
           .then( (response) => {
-            console.log(response.data);
-            window.location.reload();
+            console.log(formData);
           })
           .catch(error => {
             console.error(error);
           });
-    }
+    },
+    limitarDescricao() {
+    if (this.atividade.descricao && this.atividade.descricao.length > 255) {
+      this.atividade.descricao = this.atividade.descricao.slice(0, 255);
+      }
+    },
   },
   props: {
     editar: {
