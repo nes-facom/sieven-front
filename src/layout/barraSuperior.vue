@@ -11,13 +11,13 @@
 
           <v-spacer></v-spacer>
 
-          <v-toolbar-title v-if="$store.getters.passport"
+          <v-toolbar-title v-if="this.$store.getters.getPassport"
                            class="mr-2"
                            style="color: grey">
-            {{ $store.getters.passport }}
+            {{ this.$store.getters.getPassport }}
           </v-toolbar-title>
 
-          <div v-if="!this.$keycloak.authenticated">
+          <div v-if="!$store.getters.isAdmin">
             <v-btn class="mr-3"
                    color="#0088B7"
                    @click="redirecionarLogin">
@@ -56,6 +56,7 @@
 </template>
 
 <script>
+import middleware from '@/middleware/localStorage.js'
 
 export default {
   name: "pgBarraSuperiorIndex",
@@ -75,20 +76,16 @@ export default {
     //     this.$router.push({ name: 'eventos' })
     //   }
     // },
-    // redirecionarPaginainicial() {
-    //   if (!this.estouNaPagina('paginaInicial')){
-    //     this.$router.push({ name: 'paginaInicial' })
-    //   }
-    // },
-    redirecionarLogin() {
-      console.log('TESTE')
-      this.$router.push({ name: 'eventos' })
+    redirecionarPaginainicial() {
+      this.$router.push({ name: 'paginaInicial' })
     },
-    logar() {
-      this.$store.dispatch('logar')
+    redirecionarLogin() {
+      this.$router.push({ name: 'paginaLogin' })
     },
     deslogar() {
-      this.$store.dispatch('deslogar')
+      this.$store.commit('setPassport', null);
+      this.$store.commit('setAdminStatus', false);
+      middleware.limparToken('token')
       this.redirecionarPaginainicial()
     }
   }

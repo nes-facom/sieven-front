@@ -6,16 +6,28 @@ import Evento from '@/pages/evento/index.vue'
 import Inscricoes from '@/pages/inscricoes/index.vue'
 import Validador from '@/pages/validador/index.vue'
 import Admin from '@/pages/admin/index.vue'
-import Vue from 'vue'
-import apiAdministrador from '../api/resources/administrador';
-import store from '@/store';
+import PaginaLogin from '@/pages/login/index.vue'
+// import Vue from 'vue'
+// import apiAdministrador from '../api/resources/administrador';
+// import store from '@/store';
 
 const router = new VueRouter({
   routes: [
       {
         path: '/',
         name: 'paginaInicial',
-        component: PaginaInicial
+        component: PaginaInicial,
+        meta: {
+          isAuthenticated: false
+        }
+      },
+      {
+        path: '/login',
+        name: 'paginaLogin',
+        component: PaginaLogin,
+        meta: {
+          isAuthenticated: false
+        }
       },
       {
           path: '/registro',
@@ -70,39 +82,15 @@ const router = new VueRouter({
 
 
   router.beforeEach((to, from, next) => {
-    
     if (to.meta.isAuthenticated) {
-      Vue.$keycloak.authenticated = true
-      const basePath = window.location.toString()
-      if (!Vue.$keycloak.authenticated) {
-        Vue.$keycloak.login({ redirectUri: basePath.slice(0, -1) + to.path })
+      const token = localStorage.getItem('token');
+      if (token) {
+        next(); 
       } else {
-        const adminPass = 'brunno.lewin'
-        try {
-          //Vue.$keycloak.idTokenParsed.preferred_username
-          apiAdministrador.verificarAdmin(adminPass).then( (retorno) =>  {
-            console.log(">:D")
-            if (retorno.status == 200) {
-              const isAdmin = true;
-              console.log('rarwarawrawr')
-              store.dispatch('updateAdminStatus', isAdmin);
-              next();
-            } else if (retorno.status == 404){
-              next()
-            }
-          }) 
-        } catch (error) {
-          next()
-          //console.loge(error)
-        }
-        next()
-      }
+        next('/'); 
+      }  
     } else {
       next()
-    }
-
-    if (to.path === '/' && Vue.$keycloak.authenticated) {
-      next('/eventos');
     }
   })
 
