@@ -9,7 +9,7 @@ import Admin from '@/pages/admin/index.vue'
 import PaginaLogin from '@/pages/login/index.vue'
 // import Vue from 'vue'
 // import apiAdministrador from '../api/resources/administrador';
-// import store from '@/store';
+import store from '@/store.js';
 
 const router = new VueRouter({
   routes: [
@@ -82,15 +82,23 @@ const router = new VueRouter({
 
 
   router.beforeEach((to, from, next) => {
-    if (to.meta.isAuthenticated) {
-      const token = localStorage.getItem('token');
-      if (token) {
-        next(); 
+    const token = localStorage.getItem('token');
+    if(!token) {
+      if (to.meta.isAuthenticated) {
+        store.commit('setPassport', null);
+        store.commit('setAdminStatus', false);
+        next('/')
       } else {
-        next('/'); 
-      }  
+        next()
+      }
     } else {
-      next()
+      if(to.meta.isAuthenticated) {
+        if(from.path == '/' ) {
+          console.log('redirecionou')
+          next('/eventos')
+        }
+        next()
+      }
     }
   })
 
