@@ -36,7 +36,7 @@
 
       <v-dialog v-if="this.$store.getters.isEditor"
                 v-model="criarEventoDialog"
-                width="1000">
+                width="700">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary"
                  large
