@@ -1,4 +1,4 @@
-<template>
+<!-- <template>
   <div id="pgBarraLateral">
     <v-navigation-drawer class="mt-16"
                          :width="larguraBarraPorDispositivo()"
@@ -72,4 +72,4 @@ export default {
 
 <style>
 
-</style>
+</style> -->
