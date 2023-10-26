@@ -1,35 +1,54 @@
 <template>
   <div>
-  <v-carousel class="grey lighten-5" style="max-width: 120.125rem; max-height: 34.25rem;">
-    <v-carousel-item v-for="(event, index) in events" :key="index">
-      <v-row align="center" justify="center" class="fill-height" >
-        
-        <v-col cols="12" md="4" class="text-center">
-          <v-img :src="event.image" class="rounded-lg" max-height="300"></v-img>
-        </v-col>
-        <v-col cols="12" md="4" class="text-left">
-          <h2 class="headline">{{ event.title }}</h2>
-          <p>{{ event.description }}</p>
-          <p class="caption">{{ event.date }} | {{ event.time }}</p>
-          <v-btn @click="showDetails(event)" color="primary">Saiba Mais</v-btn>
-        </v-col>
-      </v-row>
-    </v-carousel-item>
+    <v-carousel class="grey lighten-5" style="max-width: 120.125rem; max-height: 34.25rem;">
+      <v-carousel-item v-for="(event, index) in events" :key="index">
+        <v-row align="center" justify="center" class="fill-height">
+
+          <v-col cols="12" md="4" class="text-center">
+            <v-img :src="event.image" class="rounded-lg" max-height="300"></v-img>
+          </v-col>
+          <v-col cols="12" md="4" class="text-left">
+            <h2 class="headline">{{ event.title }}</h2>
+            <p>{{ event.description }}</p>
+            <p class="caption">{{ event.date }} | {{ event.time }}</p>
+            <v-btn @click="showDetails(event)" color="primary">Saiba Mais</v-btn>
+          </v-col>
+        </v-row>
+      </v-carousel-item>
     </v-carousel>
     <component :is="componenteDinamico"></component>
-    
-  <v-footer app color="black">
+
+    <v-footer class="black">
+      <v-container dark class="black white--text text-center">
+        <v-col cols="12" class="text-center">
+          <!-- Ícone local centralizado no topo do rodapé -->
+          <v-img src="@/assets/home/nes.png" height="24" width="24"></v-img>
+        </v-col>
+
+        <v-card-text class="white--text">
+          UFMS - Universidade Federal de Mato Grosso do Sul <br>
+          NES - Núcleo de Práticas em Engenharia de Software <br>
+          AGETIC - Agência de Tecnologia da Informação e Comunicação
+        </v-card-text>
+
+        <v-divider></v-divider>
+
+        <v-card-text class="white--text">
+          {{ new Date().getFullYear() }} — <strong>SIEVEN  </strong>
+        </v-card-text>
+      </v-container>
+    </v-footer>
+    <!-- <v-footer app color="black" class="sticky-footer">
     <v-container>
       <v-row align="center">
         <v-col cols="6">
           <v-img src="@/assets/home/nes.png" height="40" contain></v-img>
           <span class="white--text">Texto 1</span>
         </v-col>
-        
       </v-row>
     </v-container>
-  </v-footer>
-</div>
+  </v-footer> -->
+  </div>
 </template>
 
 <script>
@@ -39,6 +58,7 @@ export default {
   name: "paginaInicial",
   data() {
     return {
+      
       componenteDinamico: ComponenteFilho,
       events: [
         {
@@ -58,35 +78,32 @@ export default {
         // Adicione mais eventos conforme necessário
       ],
       items: [
-      {
-        image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-        title: 'Top western road trips 1',
-        subtitle: '1,000 miles of wonder',
-        showDetails: false,
-        description: "I'm a thing. But, like most politicians, he promised more than he could deliver. You won't have time for sleeping, soldier, not with all the bed making you'll be doing. Then we'll go with that data file! Hey, you add a one and two zeros to that or we walk! You're going to do his laundry? I've got to find a way to escape."
-      },
-      {
-        image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-        title: 'Top western road trips 2',
-        subtitle: '1,000 miles of wonder',
-        showDetails: false,
-        description: "Description for the second card."
-      },
-      {
-        image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-        title: 'Top western road trips 3',
-        subtitle: '1,000 miles of wonder',
-        showDetails: false,
-        description: "Description for the third card."
-      },
-      {
-        image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-        title: 'Top western road trips 4',
-        subtitle: '1,000 miles of wonder',
-        showDetails: false,
-        description: "Description for the fourth card."
+        {
+          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+          title: 'Top western road trips 1',
+          subtitle: '1,000 miles of wonder',
+        },
+        {
+          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+          title: 'Top western road trips 2',
+          subtitle: '1,000 miles of wonder',
+        },
+        {
+          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+          title: 'Top western road trips 3',
+          subtitle: '1,000 miles of wonder',
+        },
+        {
+          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
+          title: 'Top western road trips 4',
+          subtitle: '1,000 miles of wonder'
+        }
+      ],
+      icones: [{
+        nes: '@/assets/home/nes.png',
       }
-    ]
+
+      ],
     };
 
   },
@@ -98,3 +115,17 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+</style>
