@@ -3,7 +3,8 @@
     <v-row class="mt-4">
       <v-card v-for="evento in eventos"
               :key="evento.id"
-              class="mx-auto my-3 mr-3 ml-3"
+              
+              class="mx-auto my-3 mr-10 ml-3"
               id="posicaoBaseEventoCard"
               width="280px"
               height="250px"
@@ -13,9 +14,9 @@
         <v-img :src="evento.imagem"
                height="130px">
         </v-img>
-        <v-card-subtitle class="py-0 font-weight-bold"
+        <v-card-subtitle class="py-0 font-weight-bold mt-3"
                          style="color: #0088B7">
-          {{ evento.data_inicial }} > {{ evento.data_final }}
+          {{ formatarData(evento.data_inicial) }} > {{ formatarData(evento.data_final) }}
         </v-card-subtitle>
 
         <v-card-title>
@@ -60,6 +61,7 @@
   </div>
 </template>
 <script>
+import moment from 'moment'
 import criarEventoDialog from '@/pages/eventos/components/criarEventoDialog.vue'
 import apiEventos from '../../api/resources/evento.js'
 
@@ -80,6 +82,10 @@ export default {
     })
   },
   methods: {
+    formatarData(timestamp) {
+      // Utilize o moment para formatar a data
+      return moment(timestamp).format('DD MMM').toUpperCase();
+    },
     carregarEventos() {
       this.eventos = apiEventos.listarEventos()
     },

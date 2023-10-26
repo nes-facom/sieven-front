@@ -63,16 +63,24 @@
           </v-row>
           <v-row>
             <v-col>
-              <time-picker label="Hora de Início"
-                           campo="horaInicio"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="atividade.horaInicio"
+                placeholder="Hora de Início"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaInicio')"
+            ></v-text-field>
             </v-col>
             <v-col>
-              <time-picker label="Hora de Fim"
-                           campo="horaFim"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="atividade.horaFinal"
+                placeholder="Hora Final"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaFim')"
+            ></v-text-field>
             </v-col>
           </v-row>
         </v-col>
@@ -206,6 +214,25 @@ export default {
     this.carregaCategorias()
   },
   methods: {
+    validateHora(field) {
+      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+      if (timeRegex.test(this.atividade[field])) {
+        //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
+        return this.atividade[field]
+      } else {
+        // Clear the input if the format is not valid when losing focus
+        this.atividade[field] = '';
+      }
+    },
+    getCurrentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    },
     carregaTipos() {
       apiTipo.listarTipos().then(
         (respostaTipo) => {
@@ -299,6 +326,7 @@ export default {
       apiAtividade.cadastrarAtividade(formData)
           .then( (response) => {
             console.log(formData);
+             this.$router.push({ name: 'eventos' })
           })
           .catch(error => {
             console.error(error);

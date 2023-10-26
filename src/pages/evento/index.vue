@@ -384,9 +384,7 @@ export default {
   created() {
     const eventoId = this.$route.params.eventoId
     this.carregarEvento(eventoId)
-    //if (this.atividade && this.atividade.id){
-      this.carregarAtividade(eventoId)
-    //}
+    this.carregarAtividade(eventoId)
   }
 }
 </script>
