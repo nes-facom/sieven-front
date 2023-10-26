@@ -80,8 +80,24 @@
         <v-divider class="mx-4"
                    vertical>
         </v-divider>
-
+        
         <v-col cols="6">
+          <v-select
+                v-model="selectedCategoria"
+                :items="categorias"
+                item-value="id" 
+                item-text="nome_categoria"
+                label="Categoria"
+                outlined
+              ></v-select> 
+              <v-select
+                  v-model="selectedTipo"
+                  :items="tipos"
+                  item-value="id" 
+                  item-text="nome_tipo"
+                  label="Tipo"
+                  outlined
+              ></v-select>
           <v-text-field label="Palestrante"
                         v-model="atividade.palestrante"
                         outlined>
@@ -149,6 +165,8 @@
 import apiAtividade from '../../../api/resources/atividade.js'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
+import apiTipo from '../../../api/resources/tipo.js'
+import apiCategoria from '../../../api/resources/categoria.js'
 
 export default {
   name: "pgCriarAtividadeDialogIndex",
@@ -166,16 +184,42 @@ export default {
         horario_inicio : null,
         horario_encerramento : null,
         palestrante: null,
+        tipo: null,
+        categoria: null,
         descricao: null,
         modalidade: null,
         requisitos: [],
         situacao : 'Ativa',
         evento_id: null
       },
+
+      tipos: [],
+      selectedTipo: null,
+
+      categorias: [],
+      selectedCategoria: null,
       requisitoTexto: null
     }
   },
+  created() {
+    this.carregaTipos()
+    this.carregaCategorias()
+  },
   methods: {
+    carregaTipos() {
+      apiTipo.listarTipos().then(
+        (respostaTipo) => {
+          this.tipos = respostaTipo
+        }
+      )
+    },
+    carregaCategorias(){
+      apiCategoria.listarCategorias().then(
+        (respostaCategoria) => {
+          this.categorias = respostaCategoria
+        }
+      )
+    },
     mensagemConfirmacao() {
       if (this.editar) {
         return "Editar Atividade"
@@ -232,6 +276,8 @@ export default {
       formData.append('horario_inicio',  this.atividade.horario_inicio);
       formData.append('horario_encerramento', this.atividade.horario_encerramento);
       formData.append('palestrante',  this.atividade.palestrante);
+      formData.append('id_categoria', this.selectedCategoria)
+      formData.append('id_tipo', this.selectedTipo)
       formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
       formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
       formData.append('evento_id', this.$route.params.eventoId);

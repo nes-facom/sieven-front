@@ -38,10 +38,14 @@
               </data-picker>
             </v-col>
             <v-col>
-              <time-picker label="Hora de Início"
-                           campo="horaInicio"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="evento.horaInicio"
+                placeholder="Hora Inicio"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaInicio')"
+            ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -52,10 +56,14 @@
               </data-picker>
             </v-col>
             <v-col>
-              <time-picker label="Hora de Fim"
-                           campo="horaFim"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="evento.horaFinal"
+                placeholder="Hora Final"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaFinal')"
+            ></v-text-field>
             </v-col>
           </v-row>
           <v-row>
@@ -110,12 +118,13 @@
 
 <script>
 import apiEvento from '../../../api/resources/evento.js'
-
+import { VueMaskDirective } from "v-mask";
+import Vue from 'vue'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
-import timePicker from '@/pages/eventos/components/timePicker.vue'
+//import timePicker from '@/pages/eventos/components/timePicker.vue'
 export default {
   name: "pgCriarEventoDialogIndex",
-  components: { dataPicker, timePicker },
+  components: { dataPicker },
   data() {
     return {
       evento: {
@@ -123,11 +132,11 @@ export default {
         descricao: null,
         local: null,
         dataInicio: null,
-        horaInicio: null,
+        dataFim: null,
         horario_inicio : null,
         horario_encerramento : null,
-        dataFim: null,
-        horaFim: null,
+        horaInicio: null,
+        horaFinal: null,
         base64Image: null,
         created_by_user: 1,
       },
@@ -139,10 +148,28 @@ export default {
     }
   },
   created() {
-    
+    Vue.directive("mask", VueMaskDirective);
   },
   methods: {
+    validateHora(field) {
+      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
 
+      if (timeRegex.test(this.evento[field])) {
+        //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
+        return this.evento[field]
+      } else {
+        // Clear the input if the format is not valid when losing focus
+        this.evento[field] = '';
+      }
+    },
+    getCurrentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    },
     requiredRule(fieldName) {
       return [(v) => !!v || `${fieldName} é obrigatório.`];
     },
@@ -185,7 +212,7 @@ export default {
     adicionarEvento() {
 
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
-      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
+      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFinal}`;
 
       const evento = 
       {

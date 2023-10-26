@@ -75,17 +75,18 @@
       </v-col>
     </v-row>
 
-      <v-row class="mt-10 mr-4 mb-10">
+      <v-row class="mt-10 mr-4 mb-10" >
         <v-dialog v-for="atividade in atividades"
                   :key="atividade.id"
                   v-model="atividade.dialog"
                   width="722">
           <template v-slot:activator="{ on, attrs }">
-            <v-card class="mx-auto my-2"
-                    width="280"
-                    height="280px"
+            <v-card style="margin-left: 5%"
+                    class=" my-2"
+                    width="80%"
+                    height="200px"
                     outlined>
-              <v-card-title class="py-2 justify-center"
+              <v-card-title class="py-2 justify-left"
                             style="color: #097FA8">
                 {{ atividade.nome }}
               </v-card-title>
@@ -113,7 +114,7 @@
                 </v-col>
               </v-row>
               <v-row class="mx-4">
-                <v-col v-if="!ehEditor()"
+                <v-col v-if="!isAdmin()"
                        class="pa-0">
                   <v-btn style="color: white"
                          depressed
@@ -256,8 +257,8 @@ export default {
     }
   },
   methods: {
-    ehEditor() {
-      return this.$store.getters.isEditor
+    isAdmin() {
+      return this.$store.getters.isAdmin
     },
     formatarDescricao(descricao) {
       if (descricao.length > 170) {
@@ -332,21 +333,20 @@ export default {
     carregarAtividade(eventoId) {
       apiAtividade.listarAtividades(eventoId)
           .then(response => {
-           this.atividades = response
-           // const responseData = response
-           // const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
+          this.atividades = response
+          // const responseData = response
+          // const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
 
-            //this.atividades = {
-             // nome: responseData.nome,
-             // descricao: responseData.descricao,
-             // local: responseData.local,
-             // data: dataInicial,
-             // horaInicio: moment(responseData.horaInicio).format('HH:mm'),
-             // horaFim: moment(responseData.horaFim).format('HH:mm'),
-             // palestrante: responseData.palestrante,
-             // modalidade: responseData.modalidade,
-             // dialog: false
-           // }
+          // this.atividades = {
+          //   nome: responseData.nome,
+          //   descricao: responseData.descricao,
+          //   local: responseData.local,
+          //   data: dataInicial,
+          //   horaInicio: moment(responseData.horaInicio).format('HH:mm'),
+          //   horaFim: moment(responseData.horaFim).format('HH:mm'),
+          //   palestrante: responseData.palestrante,
+          //   modalidade: responseData.modalidade,
+          //   dialog: false
           })
           .catch(error => {
             console.error(error);

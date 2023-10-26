@@ -17,7 +17,7 @@
             <v-row>
               <v-card v-for="atividade in evento.atividades"
                       :key="atividade.id"
-                      width="280"
+                      width="80%"
                       height="225"
                       class="ma-2"
                       :style="'border: 1px solid ' + qualCorAtividadeStatus(atividade.status)"
