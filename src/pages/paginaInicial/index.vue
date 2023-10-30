@@ -19,35 +19,36 @@
     <component :is="componenteDinamico"></component>
 
     <v-footer class="black">
-      <v-container dark class="black white--text text-center">
-        <v-col cols="12" class="text-center">
-          <!-- Ícone local centralizado no topo do rodapé -->
-          <v-img src="@/assets/home/nes.png" height="24" width="24"></v-img>
-        </v-col>
+  <v-container dark class="black white--text text-center">
+    <v-layout align-center justify-center class="icons-container">
+      <v-flex>
+        <v-btn icon class="mr-4">
+          <v-img :src="require('@/assets/home/agetic.png')" max-height="35" max-width="35"></v-img>
+        </v-btn>
+        <v-btn icon class="mr-4">
+          <v-img :src="require('@/assets/home/nes.png')" max-height="35" max-width="35"></v-img>
+        </v-btn>
+        <v-btn icon>
+          <v-img :src="require('@/assets/home/ufms.png')" max-height="35" max-width="35"></v-img>
+        </v-btn>
+      </v-flex>
+    </v-layout>
+    <v-card-text class="white--text">
+      UFMS - Universidade Federal de Mato Grosso do Sul <br>
+      NES - Núcleo de Práticas em Engenharia de Software <br>
+      AGETIC - Agência de Tecnologia da Informação e Comunicação
+    </v-card-text>
+    <v-divider></v-divider>
+    <v-card-text class="white--text">
+      {{ new Date().getFullYear() }} — <strong>SIEVEN </strong>
+    </v-card-text>
+  </v-container>
+</v-footer>
 
-        <v-card-text class="white--text">
-          UFMS - Universidade Federal de Mato Grosso do Sul <br>
-          NES - Núcleo de Práticas em Engenharia de Software <br>
-          AGETIC - Agência de Tecnologia da Informação e Comunicação
-        </v-card-text>
 
-        <v-divider></v-divider>
 
-        <v-card-text class="white--text">
-          {{ new Date().getFullYear() }} — <strong>SIEVEN  </strong>
-        </v-card-text>
-      </v-container>
-    </v-footer>
-    <!-- <v-footer app color="black" class="sticky-footer">
-    <v-container>
-      <v-row align="center">
-        <v-col cols="6">
-          <v-img src="@/assets/home/nes.png" height="40" contain></v-img>
-          <span class="white--text">Texto 1</span>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-footer> -->
+
+
   </div>
 </template>
 
@@ -58,7 +59,7 @@ export default {
   name: "paginaInicial",
   data() {
     return {
-      
+
       componenteDinamico: ComponenteFilho,
       events: [
         {
