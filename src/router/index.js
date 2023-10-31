@@ -12,70 +12,47 @@ import PaginaLogin from '@/pages/login/index.vue'
 import store from '@/store.js';
 
 const router = new VueRouter({
+  
   routes: [
       {
         path: '/',
         name: 'paginaInicial',
         component: PaginaInicial,
-        meta: {
-          isAuthenticated: false
-        }
       },
       {
         path: '/login',
         name: 'paginaLogin',
         component: PaginaLogin,
-        meta: {
-          isAuthenticated: false
-        }
       },
       {
           path: '/registro',
           name: 'registro',
           component: Registro,
-          meta: {
-            isAuthenticated: true
-          }
       },
       {
           path: '/eventos',
           name: 'eventos',
           component: Eventos,
-          meta: {
-            isAuthenticated: true
-          }
       },
       {
           path: '/inscricoes',
           name: 'inscricoes',
           component: Inscricoes,
-          meta: {
-            isAuthenticated: true
-          }
       },
       {
           path: '/evento/:id',
           name: 'evento',
           component: Evento,
-          meta: {
-            isAuthenticated: true
-          }
       },
       {
           path: '/validador',
           name: 'validador',
           component: Validador,
-          meta: {
-            isAuthenticated: true
-          }
       },
       {
           path: '/admin',
           name: 'admin',
           component: Admin,
-          meta: {
-            isAuthenticated: true
-          }
       },
     ]
   })
@@ -84,21 +61,9 @@ const router = new VueRouter({
   router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token');
     if(!token) {
-      if (to.meta.isAuthenticated) {
-        store.commit('setPassport', null);
-        store.commit('setAdminStatus', false);
-        next('/')
-      } else {
-        next()
-      }
-    } else {
-      if(to.meta.isAuthenticated) {
-        if(from.path == '/' ) {
-          console.log('redirecionou')
-          next('/eventos')
-        }
-        next()
-      }
+      store.commit('setPassport', null);
+      store.commit('setAdminStatus', false);
+      next()
     }
   })
 

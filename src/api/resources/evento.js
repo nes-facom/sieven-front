@@ -2,11 +2,15 @@ import { apiUsuario } from './utilitario.js'
 
 const eventoResource =
 {
-    cadastrarEvento(params)
+    cadastrarEvento(token, params)
     {
+        const headers = {
+            Authorization: 'Bearer ' + token
+        };
+
         return new Promise( (resolve) =>
         {
-            apiUsuario.post(`/evento/criar-evento`, params).then( (res) =>
+            apiUsuario.post(`/evento/criar-evento`, params, { headers }).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
