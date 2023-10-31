@@ -64,6 +64,8 @@ const router = new VueRouter({
       store.commit('setPassport', null);
       store.commit('setAdminStatus', false);
       next()
+    } else {
+      next()
     }
   })
 
