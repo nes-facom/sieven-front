@@ -35,7 +35,7 @@
 
           <v-dialog v-if="this.$store.getters.isEditor"
                           v-model="editarEventoDialog"
-                          width="1000">
+                          width="700">
           <template v-slot:activator="{on, attrs}">
             <v-btn
               class="editar-evento-button"
@@ -61,9 +61,7 @@
                         :hora-inicio="evento.horaInicio"
                         :data-fim="evento.dataFim"
                         :data-inicio="evento.dataInicio"
-                        :local="evento.local"
-                        :tipo="evento.tipo"
-                        :categoria="evento.categoria">
+                        :local="evento.local">
           </dados-evento>
         </div>
           <h2 class="mt-4 responsivo-h2">Sobre o Evento</h2>          

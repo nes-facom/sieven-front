@@ -26,24 +26,6 @@
             {{ local }}
           </v-col>
         </v-row>
-        <v-row class="py-1">
-          <v-col class="py-0">
-            <v-icon class="mr-1"
-                    size="26">
-              mdi-map-marker-outline
-            </v-icon>
-            {{ tipo }}
-          </v-col>
-        </v-row>
-        <v-row class="py-1">
-          <v-col class="py-0">
-            <v-icon class="mr-1"
-                    size="26">
-              mdi-note-text-outline
-            </v-icon>
-            {{ categoria }}
-          </v-col>
-        </v-row>
       </div>
     </v-row>
   </div>
@@ -69,12 +51,6 @@ export default {
     horaFim: {
       required: true
     },
-    categoria: {
-      required: true
-    },
-    tipo: {
-      required: true
-    }
   }
 }
 </script>
