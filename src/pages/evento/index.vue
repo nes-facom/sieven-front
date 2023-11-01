@@ -204,7 +204,7 @@
 
       <v-dialog v-if="this.$store.getters.isAdmin"
                 v-model="criarAtividadeDialog"
-                width="1000">
+                width="700">
         <template v-slot:activator="{ on, attrs }">
           <v-btn color="primary"
                  large

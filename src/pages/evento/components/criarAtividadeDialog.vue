@@ -2,29 +2,53 @@
 <template>
   <div id="criarAtividadeDialog">
     <v-card class="pa-10"
-            width="1000">
-      <v-row justify="center"
-             class="text-h3 font-weight-bold"
-             style="color: #097FA8">
-        {{ this.mensagemConfirmacao() }}
+            width="700">
+      <v-row class="text-h4 font-roboto" style="color: #097FA8">
+        Criar Atividade
       </v-row>
 
-      <v-row class="mt-10">
-        <v-col>
-          <v-text-field label="Nome"
+      <v-row class="mt-4">
+        <v-col cols="12">
+          <label class="label-style" for="nome">Nome</label>
+          <v-text-field class="campo-style"
+                        id="nome"
                         v-model="atividade.nome"
+                        placeholder="Titulo do evento"
+                        :rules="requiredRule('Nome')"
                         outlined>
           </v-text-field>
-          <v-text-field label="Local"
-                        v-model="atividade.local"
-                        outlined>
-          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <label class="label-style" for="desricao">Descrição</label>
+          <v-textarea class="campo-style" id="descricao"
+                            v-model="atividade.descricao"
+                            placeholder="Descrição sobre a atividade" 
+                            auto-grow 
+                            :rules="requiredRule('Descrição')"
+                            outlined>
+          </v-textarea>
+          <span class="char-count">
+            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
+          </span>
+        </v-col>
+      </v-row>
+      <v-row>  
+        <v-col cols="12">
+          <label class="label-style" for="capacidade">Capacidade</label>
           <v-text-field class="mb-0 pa-0"
-                        label="Numero de participantes"
+                        id="numeroParticipantes"
+                        label="Capacidade"
                         type="number"
                         v-model="atividade.numeroParticipantes"
+                        placeholder="Numero de Participantes"
+                        :rules="requiredRule('Capacidade')"
                         outlined>
           </v-text-field>
+        </v-col>
+      </v-row> 
+
           <div class="mt-0"
                style="color: grey">
             Modalidade
@@ -48,78 +72,85 @@
             </v-radio>
           </v-radio-group>
           <v-row>
-            <v-col>
-              <data-picker label="Data de Início"
+            <v-col >
+              <data-picker label="Data"
                            campo="dataInicio"
                            @dataSelecionada="selecaoData">
               </data-picker>
             </v-col>
-            <v-col>
-              <data-picker label="Data de Fim"
-                           campo="dataFim"
-                           @dataSelecionada="selecaoData">
-              </data-picker>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col>
+            <v-col cols="3">
               <v-text-field
                 v-model="atividade.horaInicio"
-                placeholder="Hora de Início"
+                placeholder="Hora Inicio"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
                 outlined
                 @blur="validateHora('horaInicio')"
             ></v-text-field>
             </v-col>
-            <v-col>
+            <v-col cols="3">
               <v-text-field
                 v-model="atividade.horaFinal"
                 placeholder="Hora Final"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
                 outlined
-                @blur="validateHora('horaFim')"
+                @blur="validateHora('horaFinal')"
             ></v-text-field>
             </v-col>
           </v-row>
-        </v-col>
-
-        <v-divider class="mx-4"
-                   vertical>
-        </v-divider>
-        
-        <v-col cols="6">
+          <v-row>
+            <v-col cols="12">
+            <label class="label-style" for="local">Local</label>
+            <v-text-field class="campo-style" 
+                          id="local"
+                          v-model="atividade.local"
+                          :rules="requiredRule('Local')"
+                          placeholder="Local do Evento"
+                          outlined>
+            </v-text-field>
+            </v-col>
+          </v-row>
+        <v-row>  
+        <v-col cols="12">
+          <label class="label-style" for="cateogria">Categoria</label>
           <v-select
                 v-model="selectedCategoria"
                 :items="categorias"
                 item-value="id" 
                 item-text="nome_categoria"
                 label="Categoria"
+                :rules="requiredRule('Categoria')"
                 outlined
-              ></v-select> 
+          ></v-select> 
+        </v-col> 
+        </v-row> 
+        <v-row>
+          <v-col cols="12">
+          <label class="label-style" for="tipo">Tipo</label>    
               <v-select
                   v-model="selectedTipo"
                   :items="tipos"
                   item-value="id" 
                   item-text="nome_tipo"
                   label="Tipo"
+                  :rules="requiredRule('Tipo')"
                   outlined
               ></v-select>
+        </v-col>
+        </v-row> 
+        <v-row>
+        <v-col cols="12">
+          <label class="label-style" for="palestrante">Palestrante</label>  
           <v-text-field label="Palestrante"
                         v-model="atividade.palestrante"
                         outlined>
           </v-text-field>
-          <v-textarea label="Descrição"
-                      v-model="atividade.descricao"
-                      auto-grow
-                      maxLength="255"
-                      outlined
-                      @input="limitarDescricao">
-          </v-textarea>
-          <span class="char-count">
-            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
-          </span>
+        </v-col>
+        </v-row>  
+        <v-row>
+        <v-col cols="12">
+          <label class="label-style" for="requisitos">Requisitos</label>
           <v-text-field label="Requisitos"
                         v-model="requisitoTexto"
                         @keydown.enter="adicionarRequisito"
@@ -144,7 +175,8 @@
             </v-list-item-group>
           </v-list>
         </v-col>
-      </v-row>
+        </v-row>
+      
       <v-row>
         <v-col>
         </v-col>
@@ -254,8 +286,8 @@ export default {
         return "Criar Atividade"
       }
     },
-    fecharCriarEventoDialog() {
-      this.$emit("fecharCriarEventoDialog")
+    requiredRule(fieldName) {
+      return [(v) => !!v || `${fieldName} é obrigatório.`];
     },
     selecaoData(campo, valor) {
       if (campo == 'dataInicio') {

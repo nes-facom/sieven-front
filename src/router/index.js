@@ -72,12 +72,12 @@ const router = new VueRouter({
       store.commit('setPassport', nome);
       store.commit('setAdminStatus', isAdmin);
 
-      if (to.path === '/login' || to.path === '/') {
+      //if (to.path === '/login' || to.path === '/') {
             // Redirecione para a tela de eventos se o usuário estiver logado e tentando acessar a tela de login
-            next({ path: '/eventos' });
-      } else {
-        next();
-      }
+           // next({ path: '/eventos' });
+      //} else {
+        //next();
+      //}
       next()
     }
     

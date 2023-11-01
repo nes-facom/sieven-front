@@ -32,12 +32,12 @@
       </v-row>
           <v-row>
             <v-col>
-              <data-picker 
-                          v-model="evento.dataInicio"
-                          label="Data de Início"
-                          campo="dataInicio"
-                          @dataSelecionada="selecaoData">
-              </data-picker>
+              <v-text-field
+                v-model="evento.dataInicio"
+                placeholder="Data de Início (DD/MM/AAAA)"
+                outlined
+                @input="validateData('dataInicio')"
+              ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
@@ -52,11 +52,12 @@
           </v-row>
           <v-row>
             <v-col>
-              <data-picker v-model="evento.dataFim"
-                          label="Data de Fim"
-                          campo="dataFim"
-                          @dataSelecionada="selecaoData">
-              </data-picker>
+              <v-text-field
+                v-model="evento.dataFim"
+                placeholder="Data de Fim (DD/MM/AAAA)"
+                outlined
+                @blur="validateData('dataFim')"
+            ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
@@ -125,12 +126,11 @@
 import { VueMaskDirective } from "v-mask";
 import Vue from 'vue'
 import apiEvento from '../../../api/resources/evento.js'
-import dataPicker from '@/pages/eventos/components/dataPicker.vue';
+
 
   
 export default{
   name:"pgEditarEventoIndex",
-  components: {dataPicker},
   data(){
     return{
       evento: {
@@ -173,9 +173,9 @@ export default{
       }
     },
     getCurrentDate() {
-      const now = new Date();
+     const now = new Date();
       const year = now.getFullYear();
-      const month = String(now.getMonth() + 1).padStart(2, '0');
+     const month = String(now.getMonth() + 1).padStart(2, '0');
       const day = String(now.getDate()).padStart(2, '0');
 
       return `${year}-${month}-${day}`;
@@ -221,13 +221,24 @@ export default{
       this.$emit("fecharEditarEventoDialog")
     },
   
-    selecaoData(campo, valor) {
-      if (campo == 'dataInicio') {
-       this.evento.dataInicio = valor
-      } else if (campo == 'dataFim') {
-        this.evento.dataFim = valor
+    validateData(field) {
+      const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+
+      if (dateRegex.test(this.evento[field])) {
+      const parts = this.evento[field].split('/');
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // Os meses em JavaScript começam em 0 (janeiro é 0)
+      const year = parseInt(parts[2], 10);
+      const currentDate = new Date();
+      const inputDate = new Date(year, month, day);
+
+      if (inputDate < currentDate) {
+      this.evento[field] = ''; // Limpa o campo se a data for inválida
       }
-    },
+    } else {
+      this.evento[field] = ''; // Limpa o campo se a data estiver em um formato inválido
+    }
+  },
     selecaoHora(campo, valor) {
       if (campo == 'horaInicio') {
         this.evento.horaInicio = valor
@@ -251,7 +262,7 @@ export default{
     },
   
     salvarEvento(){
-      const eventoId = this.$route.params.eventoId
+      const eventoId = this.$route.params.id
         
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
       this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
@@ -264,9 +275,10 @@ export default{
         data_final: this.evento.horario_encerramento,
         imagem: this.evento.base64Image,
       }
-      console.log(evento)
+      
       apiEvento.editarEventos(eventoId, evento).then(response => {
         console.log(response)
+        location.reload()
           
       })
       .catch((error) => {
@@ -277,7 +289,7 @@ export default{
   },
   
     mounted(){
-      this.eventId = this.$route.params.eventoId
+      this.eventId = this.$route.params.id
       if(this.eventId){
         this.carregarEventoData(this.eventId)
       }
