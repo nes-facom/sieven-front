@@ -41,7 +41,7 @@
                         id="numeroParticipantes"
                         label="Capacidade"
                         type="number"
-                        v-model="atividade.numeroParticipantes"
+                        v-model="atividade.quantidade_vagas"
                         placeholder="Numero de Participantes"
                         :rules="requiredRule('Capacidade')"
                         outlined>
@@ -53,34 +53,29 @@
                style="color: grey">
             Modalidade
           </div>
-          <v-radio-group class="mt-0"
-                         v-model="atividade.modalidade"
-                         row>
+          <v-radio-group class="mt-0" v-model="atividade.id_modalidade" row @change="handleRadioChange">
             <v-radio value="presencial">
               <template v-slot:label>
-                <div>
-                  Presencial
-                </div>
+                <div>Presencial</div>
               </template>
             </v-radio>
             <v-radio value="remoto">
               <template v-slot:label>
-                <div>
-                  Remoto
-                </div>
+                <div>Remoto</div>
               </template>
             </v-radio>
           </v-radio-group>
           <v-row>
             <v-col >
-              <data-picker label="Data"
+              <data-picker v-model="data"
+                           label="Data"
                            campo="dataInicio"
                            @dataSelecionada="selecaoData">
               </data-picker>
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="atividade.horaInicio"
+                v-model="horaInicio"
                 placeholder="Hora Inicio"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
@@ -90,12 +85,12 @@
             </v-col>
             <v-col cols="3">
               <v-text-field
-                v-model="atividade.horaFinal"
+                v-model="horaFim"
                 placeholder="Hora Final"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
                 outlined
-                @blur="validateHora('horaFinal')"
+                @blur="validateHora('horaFim')"
             ></v-text-field>
             </v-col>
           </v-row>
@@ -139,44 +134,6 @@
               ></v-select>
         </v-col>
         </v-row> 
-        <v-row>
-        <v-col cols="12">
-          <label class="label-style" for="palestrante">Palestrante</label>  
-          <v-text-field label="Palestrante"
-                        v-model="atividade.palestrante"
-                        outlined>
-          </v-text-field>
-        </v-col>
-        </v-row>  
-        <v-row>
-        <v-col cols="12">
-          <label class="label-style" for="requisitos">Requisitos</label>
-          <v-text-field label="Requisitos"
-                        v-model="requisitoTexto"
-                        @keydown.enter="adicionarRequisito"
-                        outlined>
-          </v-text-field>
-          <v-list disabled>
-            <v-list-item-group v-model="atividade.requisitos"
-                               color="primary">
-              <v-list-item v-for="(requisito, index) in atividade.requisitos"
-                           :key="index">
-                <v-list-item-icon>
-                  <v-icon>
-                    mdi-check
-                  </v-icon>
-                </v-list-item-icon>
-                <v-list-item-content>
-                  <v-list-item-title>
-                    {{ requisito }}
-                  </v-list-item-title>
-                </v-list-item-content>
-              </v-list-item>
-            </v-list-item-group>
-          </v-list>
-        </v-col>
-        </v-row>
-      
       <v-row>
         <v-col>
         </v-col>
@@ -207,6 +164,7 @@ import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
 import apiTipo from '../../../api/resources/tipo.js'
 import apiCategoria from '../../../api/resources/categoria.js'
+import middleware from '../../../middleware/localStorage.js'
 
 export default {
   name: "pgCriarAtividadeDialogIndex",
@@ -214,30 +172,30 @@ export default {
   data() {
     return {
       atividade: {
-        nome: null,
-        local: null,
-        numeroParticipantes: null,
-        dataInicio: null,
-        dataFim: null,
-        horaInicio: null,
-        horaFim: null,
-        horario_inicio : null,
-        horario_encerramento : null,
-        palestrante: null,
-        tipo: null,
-        categoria: null,
-        descricao: null,
-        modalidade: null,
-        requisitos: [],
-        situacao : 'Ativa',
-        evento_id: null
+        evento_id: '',
+        nome: '',
+        descricao: '',
+        local: '',
+        id_categoria: '',
+        id_tipo: '',
+        horario_inicio: '',
+        horario_encerramento: '',
+        quantidade_vagas: '',
+        id_modalidade: 1
       },
+      
+      data: '',
+      horaFim: '',
+      horaInicio: '',
+      palestrante: '',
+      requisitos: '',
 
       tipos: [],
       selectedTipo: null,
 
       categorias: [],
       selectedCategoria: null,
+
       requisitoTexto: null
     }
   },
@@ -246,15 +204,24 @@ export default {
     this.carregaCategorias()
   },
   methods: {
+    handleRadioChange() {
+      // Ao selecionar "Presencial", atribua 1 a id_modalidade
+      // Ao selecionar "Remoto", atribua 3 a id_modalidade
+      if (this.atividade.id_modalidade === 'presencial') {
+        this.atividade.id_modalidade = 1;
+      } else if (this.atividade.id_modalidade === 'remoto') {
+        this.atividade.id_modalidade = 3;
+      }
+    },
     validateHora(field) {
       const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
 
-      if (timeRegex.test(this.atividade[field])) {
+      if (timeRegex.test(this[field])) {
         //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
-        return this.atividade[field]
+        return this[field]
       } else {
         // Clear the input if the format is not valid when losing focus
-        this.atividade[field] = '';
+        this[field] = '';
       }
     },
     getCurrentDate() {
@@ -279,6 +246,7 @@ export default {
         }
       )
     },
+    
     mensagemConfirmacao() {
       if (this.editar) {
         return "Editar Atividade"
@@ -291,21 +259,21 @@ export default {
     },
     selecaoData(campo, valor) {
       if (campo == 'dataInicio') {
-        this.atividade.dataInicio = valor
+        this.dataInicio = valor
       } else if (campo == 'dataFim') {
-        this.atividade.dataFim = valor
+        this.dataFim = valor
       }
     },
     selecaoHora(campo, valor) {
       if (campo == 'horaInicio') {
-        this.atividade.horaInicio = valor
+        this.horaInicio = valor
       } else if (campo == 'horaFim') {
-        this.atividade.horaFim = valor
+        this.horaFim = valor
       }
     },
     adicionarRequisito() {
       if (this.requisitoTexto.length > 0) {
-        this.atividade.requisitos.push(this.requisitoTexto)
+        this.requisitos.push(this.requisitoTexto)
         this.requisitoTexto = null
       }
     },
@@ -324,41 +292,27 @@ export default {
   }
     },
     adicionarEvento() {
-      this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
-      this.atividade.horario_encerramento = `${this.atividade.dataFim} ${this.atividade.horaFim}`;
+      this.atividade.horario_inicio = `${this.dataInicio} ${this.horaInicio}`;
+      this.atividade.horario_encerramento = `${this.dataInicio} ${this.horaFim}`;
 
-      const formData = new FormData();
+      //const formData = new FormData();
 
-      formData.append('nome', this.atividade.nome);
-      formData.append('descricao',  this.atividade.descricao);
-      formData.append('local',  this.atividade.local);
-      formData.append('horario_inicio',  this.atividade.horario_inicio);
-      formData.append('horario_encerramento', this.atividade.horario_encerramento);
-      formData.append('palestrante',  this.atividade.palestrante);
-      formData.append('id_categoria', this.selectedCategoria)
-      formData.append('id_tipo', this.selectedTipo)
-      formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
-      formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
-      formData.append('evento_id', this.$route.params.eventoId);
-      formData.append('situacao ', this.atividade.situacao);
-     /* const atividade = {
+      const atividade = {
+        evento_id: this.$route.params.id,
         nome: this.atividade.nome,
         descricao: this.atividade.descricao,
         local: this.atividade.local,
+        id_categoria: this.selectedCategoria,
+        id_tipo: this.selectedTipo,
         horario_inicio: this.atividade.horario_inicio,
         horario_encerramento: this.atividade.horario_encerramento,
-        palestrante: this.atividade.palestrante,
-        id_modalidade: this.atividade.id_modalidade,
-        numeroParticipantes: this.atividade.numeroParticipantes,
-        evento_id: this.$route.params.eventoId,
-        situacao: this.atividade.situacao
-      }*/
+        quantidade_vagas: this.atividade.quantidade_vagas,
+        id_modalidade: this.atividade.id_modalidade
+      }
 
-
-      apiAtividade.cadastrarAtividade(formData)
+      apiAtividade.cadastrarAtividade(middleware.recuperarToken('token').access_token, atividade)
           .then( (response) => {
-            console.log(formData);
-             this.$router.push({ name: 'eventos' })
+             location.reload()
           })
           .catch(error => {
             console.error(error);

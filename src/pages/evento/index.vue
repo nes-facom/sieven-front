@@ -91,7 +91,7 @@
               <v-divider class="mx-6"></v-divider>
               <v-card-subtitle class="py-2 justify-center text-justify"
                                style="color: #8B8B8B">
-                {{ formatarDescricao(atividade.descricao) }}
+                <!-- {{ formatarDescricao(atividade.descricao) }} -->
               </v-card-subtitle>
               <v-card-subtitle class="py-0 font-weight-bold"
                                style="color: #AEAEAE">
@@ -247,8 +247,7 @@ export default {
   data() {
     return {
       evento: {},
-      atividades: [
-    ],
+      atividades: [],
       criarAtividadeDialog: false,
       editarEventoDialog:false,
       excluirDialogConfirmacao: false,
@@ -259,13 +258,13 @@ export default {
     isAdmin() {
       return this.$store.getters.isAdmin
     },
-    formatarDescricao(descricao) {
-      if (descricao.length > 170) {
-        return descricao.substring(0, 170) + '...'
-      } else {
-       return descricao
-      }
-    },
+    // formatarDescricao(descricao) {
+    //   if (descricao.length > 170) {
+    //     return descricao.substring(0, 170) + '...'
+    //   } else {
+    //    return descricao
+    //   }
+    // },
     exibirExcluirConfirmacao() {
       this.excluirDialogConfirmacao = true;
     },
@@ -333,6 +332,7 @@ export default {
       apiAtividade.listarAtividades(eventoId)
           .then(response => {
           this.atividades = response
+          console.log(response)
           // const responseData = response
           // const dataInicial = moment(responseData.horario_inicio).format('DD/MM/YYYY');
 

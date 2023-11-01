@@ -2,11 +2,15 @@ import { apiUsuario } from './utilitario.js'
 
 const atividadeResource =
 {
-    cadastrarAtividade(params)
+    cadastrarAtividade(token, params)
     {
+        const headers = {
+            Authorization: 'Bearer ' + token
+        };
+
         return new Promise( (resolve) =>
         {
-            apiUsuario.post(`/atividade/criar-atividade`, params).then( (res) =>
+            apiUsuario.post(`/atividade/criar-atividade`, params, { headers }).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
@@ -18,9 +22,10 @@ const atividadeResource =
 
     listarAtividades(eventoId)
     {
+        console.log(eventoId)
         return new Promise( (resolve) =>
         {
-            apiUsuario.get(`/atividade/${eventoId}`).then( (res) =>
+            apiUsuario.get(`/evento/${eventoId}/detalhes`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
