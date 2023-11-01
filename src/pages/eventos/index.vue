@@ -101,7 +101,8 @@ export default {
       this.eventos = apiEventos.listarEventos()
     },
     redirecionarEvento(eventoId) {
-      this.$router.push({ name: 'evento', params: { eventoId: eventoId } })
+      console.log(eventoId)
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
     },
     fecharCriarEventoDialog() {
       this.criarEventoDialog = false

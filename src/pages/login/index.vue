@@ -53,6 +53,7 @@
 <script>
 import apiLogin from '@/api/resources/login.js'
 import middleware from '@/middleware/localStorage.js'
+import jwtDecode from 'vue-jwt-decode'
 
 export default {
   name: "pgPaginaLoginIndex",
@@ -72,10 +73,15 @@ export default {
           password: this.password
         }
         apiLogin.login(credenciais).then(res => {
+          
           middleware.passarToken('token', res)
           this.$router.push({path: '/eventos'})
-          this.$store.commit('setPassport', this.email);
-          this.$store.commit('setAdminStatus', true);
+          console.log(res.access_token)
+          const decode = jwtDecode(res.access_token)
+          const nome = decode.nome
+          const admin = decode.is_admin
+          this.$store.commit('setPassport', nome);
+          this.$store.commit('setAdminStatus', admin);
         }).catch(err => 
           {
             console.log(err)

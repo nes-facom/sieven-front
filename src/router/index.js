@@ -7,6 +7,7 @@ import Inscricoes from '@/pages/inscricoes/index.vue'
 import Validador from '@/pages/validador/index.vue'
 import Admin from '@/pages/admin/index.vue'
 import PaginaLogin from '@/pages/login/index.vue'
+import jwtDecode from 'jwt-decode'
 // import Vue from 'vue'
 // import apiAdministrador from '../api/resources/administrador';
 import store from '@/store.js';
@@ -40,7 +41,7 @@ const router = new VueRouter({
           component: Inscricoes,
       },
       {
-          path: '/evento/:id',
+          path: `/evento/:id`,
           name: 'evento',
           component: Evento,
       },
@@ -65,8 +66,21 @@ const router = new VueRouter({
       store.commit('setAdminStatus', false);
       next()
     } else {
+      const decodedToken = jwtDecode(token); // Use a biblioteca jwt-decode ou similar
+      const nome = decodedToken.nome
+      const isAdmin = decodedToken.is_admin
+      store.commit('setPassport', nome);
+      store.commit('setAdminStatus', isAdmin);
+
+      if (to.path === '/login' || to.path === '/') {
+            // Redirecione para a tela de eventos se o usuário estiver logado e tentando acessar a tela de login
+            next({ path: '/eventos' });
+      } else {
+        next();
+      }
       next()
     }
+    
   })
 
 export default router

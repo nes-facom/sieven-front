@@ -37,6 +37,7 @@ const eventoResource =
     visualizarEventos(eventoId){
         return new Promise( (resolve) =>
         {
+            //console.log(eventoId)
             apiUsuario.get(`/evento/${eventoId}`).then( (res) =>
             {
                 resolve(res.data)

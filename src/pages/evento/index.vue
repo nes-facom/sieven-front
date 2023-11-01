@@ -202,7 +202,7 @@
         </v-dialog>
       </v-row>
 
-      <v-dialog v-if="this.$store.getters.isEditor"
+      <v-dialog v-if="this.$store.getters.isAdmin"
                 v-model="criarAtividadeDialog"
                 width="1000">
         <template v-slot:activator="{ on, attrs }">
@@ -381,7 +381,7 @@ export default {
     }
   },
   created() {
-    const eventoId = this.$route.params.eventoId
+    const eventoId = this.$route.params.id
     this.carregarEvento(eventoId)
     this.carregarAtividade(eventoId)
   }

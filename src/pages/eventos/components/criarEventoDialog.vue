@@ -229,7 +229,7 @@ export default {
       console.log(evento)
 
       apiEvento.cadastrarEvento(middleware.recuperarToken('token').access_token, evento).then( () => {
-        console.log(evento)
+        location.reload()
       })
       this.$emit("fecharCriarEventoDialog")
     }
