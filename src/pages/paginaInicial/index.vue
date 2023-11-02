@@ -44,16 +44,11 @@
     </v-card-text>
   </v-container>
 </v-footer>
-
-
-
-
-
   </div>
 </template>
 
 <script>
-
+import apiEventos from '../../api/resources/evento.js'
 import ComponenteFilho from './cardList.vue';
 export default {
   name: "paginaInicial",
@@ -61,58 +56,16 @@ export default {
     return {
 
       componenteDinamico: ComponenteFilho,
-      events: [
-        {
-          title: 'Evento 1',
-          description: 'Descrição do Evento 1.',
-          date: '01/01/2023',
-          time: '14:00',
-          image: "https://picsum.photos/1922/548?random=$1",
-        },
-        {
-          title: 'Evento 2',
-          description: 'Descrição do Evento 2.',
-          date: '02/01/2023',
-          time: '15:30',
-          image: "../../assets/agetic_logo.png",
-        },
-        // Adicione mais eventos conforme necessário
-      ],
-      items: [
-        {
-          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-          title: 'Top western road trips 1',
-          subtitle: '1,000 miles of wonder',
-        },
-        {
-          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-          title: 'Top western road trips 2',
-          subtitle: '1,000 miles of wonder',
-        },
-        {
-          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-          title: 'Top western road trips 3',
-          subtitle: '1,000 miles of wonder',
-        },
-        {
-          image: 'https://cdn.vuetifyjs.com/images/cards/sunshine.jpg',
-          title: 'Top western road trips 4',
-          subtitle: '1,000 miles of wonder'
-        }
-      ],
-      icones: [{
-        nes: '@/assets/home/nes.png',
-      }
+      events: [],
+      items: [],
 
-      ],
     };
 
   },
-  methods: {
-    showDetails(event) {
-      // Lógica para exibir mais detalhes do evento
-      console.log('Detalhes do evento:', event);
-    },
+  created() {
+    apiEventos.listarEventos().then((response) => {
+      this.events = response
+    })
   },
 };
 </script>

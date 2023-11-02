@@ -33,11 +33,11 @@
 
 <script>
 import barraSuperior from "@/layout/barraSuperior.vue";
-import barraLateral from "@/layout/barraLateral.vue";
+//import barraLateral from "@/layout/barraLateral.vue";
 
 export default {
   name: "App",
-  components: { barraSuperior, barraLateral },
+  components: { barraSuperior },
 };
 </script>
 
