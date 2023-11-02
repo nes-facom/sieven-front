@@ -5,13 +5,13 @@
         <v-row align="center" justify="center" class="fill-height">
 
           <v-col cols="12" md="4" class="text-center">
-            <v-img :src="event.image" class="rounded-lg" max-height="300"></v-img>
+            <v-img :src="event.imagem" class="rounded-lg" max-height="300"></v-img>
           </v-col>
           <v-col cols="12" md="4" class="text-left">
-            <h2 class="headline">{{ event.title }}</h2>
-            <p>{{ event.description }}</p>
-            <p class="caption">{{ event.date }} | {{ event.time }}</p>
-            <v-btn @click="showDetails(event)" color="primary">Saiba Mais</v-btn>
+            <h2 class="headline">{{ event.nome }}</h2>
+            <p>{{ event.descricao }}</p>
+            <p class="caption">{{ event.horario_inicio }} | {{ event.horario_encerramento }}</p>
+            <v-btn @click="showDetails(event.id)" color="primary">Saiba Mais</v-btn>
           </v-col>
         </v-row>
       </v-carousel-item>
@@ -22,7 +22,7 @@
   <v-container dark class="black white--text text-center">
     <v-layout align-center justify-center class="icons-container">
       <v-flex>
-        <v-btn icon class="mr-4">
+        <!-- <v-btn icon class="mr-4">
           <v-img :src="require('@/assets/home/agetic.png')" max-height="35" max-width="35"></v-img>
         </v-btn>
         <v-btn icon class="mr-4">
@@ -30,7 +30,7 @@
         </v-btn>
         <v-btn icon>
           <v-img :src="require('@/assets/home/ufms.png')" max-height="35" max-width="35"></v-img>
-        </v-btn>
+        </v-btn> -->
       </v-flex>
     </v-layout>
     <v-card-text class="white--text">
@@ -63,10 +63,15 @@ export default {
 
   },
   created() {
-    apiEventos.listarEventos().then((response) => {
-      this.events = response
+    apiEventos.listarEventosPaginaInicial().then((response) => {
+      this.events = response.eventosDestaque
     })
   },
+  methods: {
+    showDetails(eventoId) {
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
+    }
+  }
 };
 </script>
 

@@ -30,6 +30,20 @@ const eventoResource =
         })
     },
 
+    listarEventosPaginaInicial()
+    {
+        return new Promise( (resolve) =>
+        {
+            apiUsuario.get(`/eventos-pagina-inicial`, ).then( (res) =>
+            {
+                resolve(res.data)
+            }).catch( () =>
+            {
+
+            })
+        })
+    },
+
     visualizarEventos(eventoId){
         return new Promise( (resolve) =>
         {

@@ -9,12 +9,12 @@
           sm="6"
           md="3">
           <v-card class="elevation-0" width="16.375rem">
-            <v-img :src="item.image" height="8.188rem" cover></v-img> 
-            <v-card-title>{{ item.title }}</v-card-title>
-            <v-card-subtitle>{{ item.title }}</v-card-subtitle>
+            <v-img :src="item.imagem" height="8.188rem" cover></v-img> 
+            <v-card-title>{{ item.nome }}</v-card-title>
+            <v-card-subtitle>{{ item.data_inicial }}</v-card-subtitle>
             <v-card-text>
               <v-icon>mdi-map-marker</v-icon>
-              <span class="text-subtitle-1" style="color: #4C576C">{{ item.text }}</span>
+              <span class="text-subtitle-1" style="color: #4C576C">{{ item.local }}</span>
             </v-card-text>
           </v-card>
         </v-col>
@@ -45,8 +45,8 @@ export default {
   }),
 
   created() {
-    apiEventos.listarEventos().then((response) => {
-      this.items = response
+    apiEventos.listarEventosPaginaInicial().then((response) => {
+      this.items = response.maisEventos
     })
   },
   methods: {
