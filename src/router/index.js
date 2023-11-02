@@ -61,7 +61,6 @@ const router = new VueRouter({
 
   router.beforeEach((to, from, next) => {
     const token = localStorage.getItem('token');
-    console.log(token)
     if(token === null) {
       store.commit('setPassport', null);
       store.commit('setAdminStatus', false);

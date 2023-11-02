@@ -32,14 +32,19 @@
       </v-row>
           <v-row>
             <v-col>
-              <data-picker label="Data de Início"
-                           campo="dataInicio"
-                           @dataSelecionada="selecaoData">
-              </data-picker>
+             <v-text-field
+                id="dataInicio"
+                v-model="dataInicio"
+                placeholder="Data (DD/MM/AAAA)"
+                outlined
+                v-mask="'##/##/####'"
+                :rules="requiredRule('Data')"
+                @blur="validateData('dataInicio')"
+              ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="evento.horaInicio"
+                v-model="horaInicio"
                 placeholder="Hora Inicio"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
@@ -50,14 +55,19 @@
           </v-row>
           <v-row>
             <v-col>
-              <data-picker label="Data de Fim"
-                           campo="dataFim"
-                           @dataSelecionada="selecaoData">
-              </data-picker>
+              <v-text-field
+                id="dataFim"
+                v-model="dataFim"
+                placeholder="Data (DD/MM/AAAA)"
+                outlined
+                v-mask="'##/##/####'"
+                :rules="requiredRule('Data')"
+                @blur="validateData('dataFim')"
+              ></v-text-field>
             </v-col>
             <v-col>
               <v-text-field
-                v-model="evento.horaFinal"
+                v-model="horaFinal"
                 placeholder="Hora Final"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
@@ -120,28 +130,29 @@
 import apiEvento from '../../../api/resources/evento.js'
 import { VueMaskDirective } from "v-mask";
 import Vue from 'vue'
-import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import middleware from '../../../middleware/localStorage.js'
 //import timePicker from '@/pages/eventos/components/timePicker.vue'
 export default {
   name: "pgCriarEventoDialogIndex",
-  components: { dataPicker },
   data() {
     return {
       evento: {
         nome: null,
         descricao: null,
         local: null,
-        dataInicio: null,
-        dataFim: null,
         horario_inicio : null,
         horario_encerramento : null,
-        horaInicio: null,
-        horaFinal: null,
         base64Image: null,
         created_by_user: 1,
       },
+      
       selectedImage: null,
+
+      horaInicio: '',
+      horaFinal: '',
+
+      dataInicio: '',
+      dataFim: '',
 
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
@@ -152,15 +163,34 @@ export default {
     Vue.directive("mask", VueMaskDirective);
   },
   methods: {
-    validateHora(field) {
-      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
 
-      if (timeRegex.test(this.evento[field])) {
+    validateData(field) {
+      const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+      console.log(this[field])
+      if (dateRegex.test(this[field])) {
+        const parts = this[field].split('/');
+        const day = parseInt(parts[0], 10);
+        const month = parseInt(parts[1], 10) - 1; // Os meses em JavaScript começam em 0 (janeiro é 0)
+        const year = parseInt(parts[2], 10);
+        const currentDate = new Date();
+        const inputDate = new Date(year, month, day);
+  
+        if (inputDate < currentDate) {
+          this[field] = ''; // Limpa o campo se a data for inválida
+        }
+    } else {
+        this[field] = ''; // Limpa o campo se a data estiver em um formato inválido
+    }
+  },
+    validateHora(field) {
+       const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+      if (timeRegex.test(this[field])) {
         //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
-        return this.evento[field]
+        return this[field]
       } else {
         // Clear the input if the format is not valid when losing focus
-        this.evento[field] = '';
+        this[field] = '';
       }
     },
     getCurrentDate() {
@@ -178,13 +208,13 @@ export default {
     fecharCriarEventoDialog() {
       this.$emit("fecharCriarEventoDialog")
     },
-    selecaoData(campo, valor) {
-      if (campo == 'dataInicio') {
-        this.evento.dataInicio = valor
-      } else if (campo == 'dataFim') {
-        this.evento.dataFim = valor
-      }
-    },
+    // selecaoData(campo, valor) {
+    //   if (campo == 'dataInicio') {
+    //     this.dataInicio = valor
+    //   } else if (campo == 'dataFim') {
+    //     this.dataFim = valor
+    //   }
+    // },
     getEventos() {
       
     },
@@ -212,8 +242,8 @@ export default {
 
     adicionarEvento() {
 
-      this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
-      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFinal}`;
+      this.evento.horario_inicio = `${this.dataInicio} ${this.horaInicio}`;
+      this.evento.horario_encerramento = `${this.dataFim} ${this.horaFinal}`;
 
       const evento = 
       {

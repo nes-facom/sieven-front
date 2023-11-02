@@ -67,11 +67,15 @@
           </v-radio-group>
           <v-row>
             <v-col >
-              <data-picker v-model="data"
-                           label="Data"
-                           campo="dataInicio"
-                           @dataSelecionada="selecaoData">
-              </data-picker>
+              <v-text-field
+                id="data"
+                v-model="data"
+                placeholder="Data (DD/MM/AAAA)"
+                outlined
+                v-mask="'##/##/####'"
+                :rules="requiredRule('Data')"
+                @blur="validateData()"
+              ></v-text-field>
             </v-col>
             <v-col cols="3">
               <v-text-field
@@ -204,6 +208,24 @@ export default {
     this.carregaCategorias()
   },
   methods: {
+    validateData() {
+      const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
+    
+      if (dateRegex.test(this.data)) {
+      const parts = this.data.split('/');
+      const day = parseInt(parts[0], 10);
+      const month = parseInt(parts[1], 10) - 1; // Os meses em JavaScript começam em 0 (janeiro é 0)
+      const year = parseInt(parts[2], 10);
+      const currentDate = new Date();
+      const inputDate = new Date(year, month, day);
+
+      if (inputDate < currentDate) {
+      this.data = ''; // Limpa o campo se a data for inválida
+      }
+    } else {
+      this.data = ''; // Limpa o campo se a data estiver em um formato inválido
+    }
+  },
     handleRadioChange() {
       // Ao selecionar "Presencial", atribua 1 a id_modalidade
       // Ao selecionar "Remoto", atribua 3 a id_modalidade
@@ -292,8 +314,8 @@ export default {
   }
     },
     adicionarEvento() {
-      this.atividade.horario_inicio = `${this.dataInicio} ${this.horaInicio}`;
-      this.atividade.horario_encerramento = `${this.dataInicio} ${this.horaFim}`;
+      this.atividade.horario_inicio = `${this.data} ${this.horaInicio}`;
+      this.atividade.horario_encerramento = `${this.data} ${this.horaFim}`;
 
       //const formData = new FormData();
 
