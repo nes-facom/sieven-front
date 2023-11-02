@@ -189,9 +189,9 @@
 
           <atividade-dialog 
                             :id="atividade.id"
-                            :hora-fim="atividade.horaFim"
-                            :hora-inicio="atividade.horaInicio"
-                            :data="atividade.data"
+                            :hora-fim="atividade.horario_encerramento"
+                            :hora-inicio="atividade.horario_inicio"
+                            :data="atividade.dataInicio"
                             :local="atividade.local"
                             :quantidade_vagas="atividade.quantidade_vagas"
                             :id_modalidade="atividade.id_modalidade"

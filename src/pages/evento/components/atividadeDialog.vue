@@ -26,22 +26,13 @@
         </span>
 
         {{ local }}
-      </v-card-subtitle>
-      <v-card-subtitle class="py-2 text-justify"
-                       style="color: #8B8B8B">
-        <span class="font-weight-bold">
-          Numero de Vagas:
-        </span>
-
-        {{ quantidade_vagas }}
-      </v-card-subtitle>
-      
+      </v-card-subtitle>   
       <v-card-subtitle class="py-2 text-justify"
                        style="color: #8B8B8B">
             <span class="font-weight-bold">
               Data:
             </span>
-        {{ data }}
+            {{ formatarData(horaInicio) }}
       </v-card-subtitle>
       <v-row class="py-2 mb-1">
         <v-col class="pa-0">
@@ -50,7 +41,7 @@
             <span class="ml-3 font-weight-bold">
               Horário:
             </span>
-            {{ horaInicio }} - {{ horaFim }}
+            {{ formatarHora(horaInicio) }} - {{ formatarHora(horaFim) }}
           </v-card-subtitle>
         </v-col>
 
@@ -79,6 +70,15 @@ export default {
     },
     getModalidadeText(id) {
       return id === 1 ? 'Presencial' : (id === 2 ? 'Remoto' : '');
+    },
+    formatarHora(hora) {
+      const data = new Date(hora);
+      const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return horaFormatada;
+    },
+    formatarData(data) {
+      const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+      return dataFormatada;
     },
   },
   props: {
