@@ -238,6 +238,7 @@ import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
 import apiEvento from '../../api/resources/evento.js'
 import apiAtividade from '../../api/resources/atividade.js'
 import excluirAtividadeDialog from '@/pages/evento/components/excluirAtividadeDialog.vue'
+import middleware from '../../middleware/localStorage.js'
 //import store from '@/store';
 
 
@@ -294,6 +295,7 @@ export default {
             const dataFinalFormatada = dataFinal.toLocaleDateString();
 
             this.evento = {
+              id: eventoResponse.id,
               imagem: eventoResponse.imagem || 'https://img2.gratispng.com/20180510/sxq/kisspng-boulder-theater-computer-icons-ticket-cinema-5af509b9cdcea8.635574511526008249843.jpg',
               nome: eventoResponse.nome,
               descricao: eventoResponse.descricao,
@@ -314,9 +316,7 @@ export default {
           });
     },
     confirmarEventoExclusao(){
-      const eventoId = this.$route.params.eventoId;
-
-      apiEvento.deletarEventos(eventoId)
+      apiEvento.deletarEventos(middleware.recuperarToken('token').access_token, this.evento.id)
       .then(response =>{
         console.log('Evento excluído com sucesso', response)
         this.excluirDialogConfirmacao = false

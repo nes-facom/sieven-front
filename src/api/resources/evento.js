@@ -48,10 +48,14 @@ const eventoResource =
         })
     },
 
-    editarEventos(eventoId , eventoData){
+    editarEventos(token, eventoId , eventoData){
         return new Promise( (resolve, reject) =>
         {
-            apiUsuario.put(`/evento/${eventoId}` , eventoData).then((res) =>
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.put(`/evento/${eventoId}` , eventoData, { headers }).then((res) =>
             {   
                 resolve(res)
             }).catch( (error) =>
@@ -61,15 +65,20 @@ const eventoResource =
         })
     },
 
-    deletarEventos(eventoId) {
+    deletarEventos(token, eventoId) {
         return new Promise((resolve, reject) => {
-          apiUsuario.delete(`/evento/${eventoId}`)
-            .then((res) => {
-              resolve(res);
-            })
-            .catch((error) => {
-              reject(error);
-            });
+
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.delete(`/evento/${eventoId}`, { headers })
+                .then((res) => {
+                resolve(res);
+                })
+                .catch((error) => {
+                reject(error);
+                });
         });
       }
 }

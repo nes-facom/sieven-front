@@ -126,9 +126,8 @@
 import { VueMaskDirective } from "v-mask";
 import Vue from 'vue'
 import apiEvento from '../../../api/resources/evento.js'
+import middleware from '../../../middleware/localStorage.js'
 
-
-  
 export default{
   name:"pgEditarEventoIndex",
   data(){
@@ -276,7 +275,7 @@ export default{
         imagem: this.evento.base64Image,
       }
       
-      apiEvento.editarEventos(eventoId, evento).then(response => {
+      apiEvento.editarEventos(middleware.recuperarToken('token').access_token, eventoId, evento).then(response => {
         console.log(response)
         location.reload()
           
