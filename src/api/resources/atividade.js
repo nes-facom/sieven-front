@@ -61,9 +61,12 @@ const atividadeResource =
         })
     },
 
-    deletarAtividade(atividadeId) {
+    deletarAtividade(token, atividadeId) {
         return new Promise((resolve, reject) => {
-          apiUsuario.delete(`/atividade/${atividadeId}`)
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+          apiUsuario.delete(`/atividade/${atividadeId}`, { headers })
             .then((res) => {
               resolve(res);
             })
