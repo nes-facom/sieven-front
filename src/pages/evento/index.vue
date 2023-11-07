@@ -9,9 +9,10 @@
                  id="cardBase"
                  class="mx-auto">      
           </v-img>
-          <v-btn class="excluir-evento-button"
+          <v-btn v-if="this.$store.getters.isAdmin" class="excluir-evento-button"
           color="white"
           outlined
+          
           @click="exibirExcluirConfirmacao">
             Excluir
           </v-btn>

@@ -26,37 +26,37 @@
       </v-carousel-item>
     </v-carousel>
     <component :is="componenteDinamico"></component>
-    <v-row justify="center">
-      <v-btn @click="showDetails(event.id)" color="primary">Ver Mais</v-btn>
-    </v-row>
+      <v-row justify="center">
+        <v-btn @click="redirecionaEventos()" color="primary">Ver Mais</v-btn>
+      </v-row>
     <spacer></spacer>
     <v-footer class="black">
-  <v-container dark class="black white--text text-center">
-    <v-layout align-center justify-center class="icons-container">
-      <v-flex>
-        <v-btn icon class="mr-4">
-          <v-img :src="require('@/assets/home/agetic.png')" max-height="45" max-width="35"></v-img>
-        </v-btn>
-        <v-btn icon class="mr-4">
-          <v-img :src="require('@/assets/home/nes.png')" max-height="45" max-width="35"></v-img>
-        </v-btn>
-        <v-btn icon>
-          <v-img :src="require('@/assets/home/ufms.png')" max-height="45" max-width="35"></v-img>
-        </v-btn>
-      </v-flex>
-    </v-layout>
-    <spacer></spacer>
-    <v-card-text class="white--text">
-      UFMS - Universidade Federal de Mato Grosso do Sul <br>
-      NES - Núcleo de Práticas em Engenharia de Software <br>
-      AGETIC - Agência de Tecnologia da Informação e Comunicação
-    </v-card-text>
-    <v-divider></v-divider>
-    <v-card-text class="white--text">
-      {{ new Date().getFullYear() }} — <strong>SIEVEN </strong>
-    </v-card-text>
-  </v-container>
-</v-footer>
+      <v-container dark class="black white--text text-center">
+        <v-layout align-center justify-center class="icons-container">
+          <v-flex>
+            <v-btn icon class="mr-4">
+              <v-img :src="require('@/assets/home/agetic.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+            <v-btn icon class="mr-4">
+              <v-img :src="require('@/assets/home/nes.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+            <v-btn icon>
+              <v-img :src="require('@/assets/home/ufms.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+        <spacer></spacer>
+        <v-card-text class="white--text">
+          UFMS - Universidade Federal de Mato Grosso do Sul <br>
+          NES - Núcleo de Práticas em Engenharia de Software <br>
+          AGETIC - Agência de Tecnologia da Informação e Comunicação
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-text class="white--text">
+          {{ new Date().getFullYear() }} — <strong>SIEVEN </strong>
+        </v-card-text>
+      </v-container>
+    </v-footer>
   </div>
 </template>
 
@@ -84,6 +84,9 @@ export default {
     showDetails(eventoId) {
       this.$router.push({ name: 'evento', params: { id: eventoId } })
     }, 
+    redirecionaEventos() {
+      this.$router.push({name: 'eventos'})
+    },
     formatarData(data) {
       const parts = data.split(' ');
       const dataPart = parts[0];
