@@ -48,10 +48,14 @@ const atividadeResource =
         })
     },
 
-    editarAtividades(atividadeId , atividadeData){
+    editarAtividades(token, atividadeId , atividadeData){
         return new Promise( (resolve, reject) =>
         {
-            apiUsuario.put(`/atividade/${atividadeId}` , atividadeData).then((res) =>
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.put(`/atividade/${atividadeId}` , atividadeData, { headers }).then((res) =>
             {   
                 resolve(res)
             }).catch( (error) =>

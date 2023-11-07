@@ -124,7 +124,7 @@
                 </v-col>
                 <div v-else>
                   <v-col class="pa-0">
-                    <v-dialog v-model="editarAtividadeDialog"
+                    <v-dialog v-model="atividade.editarDialog"
                               width="700">
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn style="color: white"
@@ -140,23 +140,14 @@
                           </v-icon>
                         </v-btn>
                       </template>
-<!--                      Adicionar caso de exceção para edição-->
                       <editar-atividade-dialog :editar="true"
                                               :id="atividade.id"
-                                              :hora-final="formatarHora(atividade.horario_encerramento)"
-                                              :hora-inicial="formatarHora(atividade.horario_inicio)"
-                                              :data="formatarData(atividade.horario_inicio)"
-                                              :local="atividade.local"
-                                              :quantidade_vagas="atividade.quantidade_vagas"
-                                              :id_modalidade="atividade.id_modalidade"
-                                              :id_categoria="atividade.id_categoria"
-                                              :id_tipo="atividade.id_tipo"
-                                              :descricao="atividade.descricao"
-                                              :nome="atividade.nome"
-                                              @fecharAtividadeDialog="fecharAtividadeDialog">
+                                              :atividade="atividade"
+                                              @editarAtividade="fecharAtividadeDialog"
                                               @fecharEditarAtividadeDialog="fecharEditarAtividadeDialog">
                       </editar-atividade-dialog>
                     </v-dialog>
+                  
                     <v-dialog v-model="atividade.excluirDialog"
                               width="512">
                       <template v-slot:activator="{ on, attrs }">
@@ -175,6 +166,7 @@
                         </v-btn>
                       </template>
                       <excluir-atividade-dialog :id="atividade.id"
+                                                :itemProp="atividade"
                                                 @excluirAtividade="excluirAtividade"
                                                 @cancelarExcluir="cancelarExcluirAtividade">
                       </excluir-atividade-dialog>
