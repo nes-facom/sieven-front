@@ -36,6 +36,11 @@
 <script>
 export default {
   name: "excluirAtividadeDialog",
+  created() {
+    console.log(this.id)
+    //console.log(this.itemProp)
+  },
+
   methods: {
     excluirAtividade() {
       this.$emit("excluirAtividade", this.id)
@@ -47,7 +52,8 @@ export default {
   props: {
     id: {
       required: true
-    }
+    },
+    
   }
 }
 </script>

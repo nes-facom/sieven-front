@@ -38,15 +38,13 @@
 </template>
 
 <script>
-import barraSuperior from '@/layout/barraSuperior.vue'
-import barraLateral from '@/layout/barraLateral.vue'
+import barraSuperior from "@/layout/barraSuperior.vue";
+import barraLateral from "@/layout/barraLateral.vue";
 
 export default {
-  name: 'App',
+  name: "App",
   components: { barraSuperior, barraLateral },
-}
+};
 </script>
 
-<style>
-
-</style>
+<style></style>

@@ -9,9 +9,10 @@
                  id="cardBase"
                  class="mx-auto">      
           </v-img>
-          <v-btn class="excluir-evento-button"
+          <v-btn v-if="this.$store.getters.isAdmin" class="excluir-evento-button"
           color="white"
           outlined
+          
           @click="exibirExcluirConfirmacao">
             Excluir
           </v-btn>
@@ -125,7 +126,7 @@
                 <div v-else>
                   <v-col class="pa-0">
                     <v-dialog v-model="atividade.editarDialog"
-                              width="1000">
+                              width="700">
                       <template v-slot:activator="{ on, attrs }">
                         <v-btn style="color: white"
                                depressed
@@ -140,14 +141,14 @@
                           </v-icon>
                         </v-btn>
                       </template>
-<!--                      Adicionar caso de exceção para edição-->
-                      <criar-atividade-dialog :editar="true"
+                      <editar-atividade-dialog :editar="true"
                                               :id="atividade.id"
-                                              @adicionarAtividade="adicionarAtividade"
-                                              @cancelarAtividade="cancelarAtividade"
-                                              @cancelarEditarAtividade="cancelarEditarAtividade">
-                      </criar-atividade-dialog>
+                                              :atividade="atividade"
+                                              @editarAtividade="fecharAtividadeDialog"
+                                              @fecharEditarAtividadeDialog="fecharEditarAtividadeDialog">
+                      </editar-atividade-dialog>
                     </v-dialog>
+                  
                     <v-dialog v-model="atividade.excluirDialog"
                               width="512">
                       <template v-slot:activator="{ on, attrs }">
@@ -166,6 +167,7 @@
                         </v-btn>
                       </template>
                       <excluir-atividade-dialog :id="atividade.id"
+                                                :itemProp="atividade"
                                                 @excluirAtividade="excluirAtividade"
                                                 @cancelarExcluir="cancelarExcluirAtividade">
                       </excluir-atividade-dialog>
@@ -189,8 +191,8 @@
 
           <atividade-dialog 
                             :id="atividade.id"
-                            :hora-fim="atividade.horario_encerramento"
-                            :hora-inicio="atividade.horario_inicio"
+                            :hora-fim="formatarHora(atividade.horario_inicio)"
+                            :hora-inicio="formatarHora(atividade.horario_inicio)"
                             :data="atividade.dataInicio"
                             :local="atividade.local"
                             :quantidade_vagas="atividade.quantidade_vagas"
@@ -232,6 +234,7 @@
 //import moment from 'moment'
 
 import editarEventoDialog from './components/editarEventoDialog.vue'
+import editarAtividadeDialog from './components/editarAtividadeDialog.vue'
 import atividadeDialog from '@/pages/evento/components/atividadeDialog.vue'
 import criarAtividadeDialog from '@/pages/evento/components/criarAtividadeDialog.vue' 
 import dadosEvento from '@/pages/evento/components/dadosEvento.vue'
@@ -244,13 +247,14 @@ import middleware from '../../middleware/localStorage.js'
 
 export default {
   name: "pgEventoIndex",
-  components: { atividadeDialog, criarAtividadeDialog, dadosEvento, excluirAtividadeDialog, editarEventoDialog},
+  components: { atividadeDialog, criarAtividadeDialog, dadosEvento, excluirAtividadeDialog, editarEventoDialog , editarAtividadeDialog},
   data() {
     return {
       evento: {},
       atividades: [],
       criarAtividadeDialog: false,
       editarEventoDialog:false,
+      editarAtividadeDialog: false,
       excluirDialogConfirmacao: false,
       excluirAtividadeDialog: false,
     }
@@ -266,6 +270,31 @@ export default {
     //    return descricao
     //   }
     // },
+    formatarHora(hora) {
+      const data = new Date(hora);
+      const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      return horaFormatada;
+    },
+    formatarData(data) {
+      const dataFormatada = new Date(data).toLocaleDateString('pt-BR');
+      return dataFormatada;
+    },
+
+    obterTipo(id_tipo){
+      const tipos = {
+        1: "Conferências",
+        2: "Seminários",
+        3: "Congressos",
+        4: "Workshops",
+        5: "Palestras",
+        6: "Culturais",
+        7: "Esportivos"  
+       }
+       const tipo = tipos[id_tipo]
+
+       return {tipo}
+
+  },
     exibirExcluirConfirmacao() {
       this.excluirDialogConfirmacao = true;
     },
@@ -280,6 +309,9 @@ export default {
     },
     fecharEditarEventoDialog(){
       this.editarEventoDialog = false
+    },
+    fecharEditarAtividadeDialog(){
+      this.editarAtividadeDialog = false
     },
     carregarEvento(eventoId) {
       apiEvento.visualizarEventos(eventoId)
@@ -365,10 +397,11 @@ export default {
     excluirAtividade(atividadeId) {
       
       // Disparar AXIOS
-      apiAtividade.deletarAtividade(atividadeId)
+      apiAtividade.deletarAtividade(middleware.recuperarToken('token').access_token, atividadeId)
       .then(response =>{
         console.log('Atividade excluída com sucesso', response)
-        this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
+        //this.atividades[atividadeId - 1].excluirAtividadeDialog = false;
+        location.reload()
     })
     .catch(error => {
         console.error('Erro ao excluir evento', error)

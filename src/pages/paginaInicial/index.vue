@@ -1,139 +1,119 @@
 <template>
-  <div id="pgPaginaInicial">
-    <v-row class="pt-8">
-      <v-col class="d-flex justify-center">
-        <v-card class="pb-12"
-                width="90%">
-          <v-row justify="center">
-            <v-card-title class="mt-8 mb-4 text-h3 font-weight-bold"
-                          style="color: #0088B7">
-              Oque é o SIEVEN?
-            </v-card-title>
-          </v-row>
-
-          <v-card-text class="pa-4 text-justify text-subtitle-1">
-            
-          </v-card-text>
-
-          <div>
-            <v-card v-for="item in sieven"
-                    :key="item.id"
-                    class="mb-10 mt-3 pa-2 d-flex align-center justify-end rounded-0 text-h3 font-weight-bold"
-                    color="#0088B7"
-                    :width="item.tamanho"
-                    flat>
-              <v-icon class="mr-4"
-                      size="60"
-                      color="white">
-                {{ item.icone }}
-              </v-icon>
-              <span class="mr-2"
-                    style="color: white">
-                {{ item.titulo }}
-              </span>
-            </v-card>
-          </div>
-        </v-card>
+  <div>
+    <v-carousel class="grey lighten-5" style="max-width: 120.125rem; max-height: 34.25rem;">
+      <v-carousel-item v-for="(event, index) in events" :key="index">
+        <v-row align="center" justify="center" class="fill-height">
+  <v-col cols="12" md="4" class="text-center">
+    <v-img :src="event.imagem" class="rounded-lg" max-height="300"></v-img>
+  </v-col>
+  <v-col cols="12" md="4" class="text-left">
+    <h2 class="headline">{{ event.nome }}</h2>
+    <p>{{ event.descricao }}</p>
+    <v-row>
+      <v-col>
+        <v-icon size="26">mdi-calendar-month-outline</v-icon>
+        {{ formatarData(event.data_inicial)}} - {{ formatarData(event.data_final)}}
       </v-col>
-
-      <v-col class="d-flex justify-center">
-        <v-card class="pb-16"
-                width="90%">
-          <v-row justify="center">
-            <v-card-title class="mt-8 mb-4 text-h3 font-weight-bold"
-                          style="color: #0088B7">
-              Parceiros
-            </v-card-title>
-          </v-row>
-
-          <v-row justify="center">
-            <v-col>
-              <v-img :src="require('../../assets/agetic_logo.png')"
-                     class="ml-auto mr-auto"
-                     width="65%"
-                     @click="redirecionarAgetic">
-              </v-img>
-            </v-col>
-          </v-row>
-
-          <v-row>
-            <v-col >
-              <v-img :src="require('../../assets/ufms_logo.png')"   
-                     class="ml-auto"
-                     width="60%"
-                     @click="redirecionarUfms">
-              </v-img>
-            </v-col>
-            <v-col>
-              <v-row>
-                <v-col>
-                  <v-img :src="require('../../assets/facom_logo.png')"
-                         class="ml-14"
-                         width="40%"
-                         @click="redirecionarFacom">
-                  </v-img>
-                </v-col>
-              </v-row>
-              <v-row>
-                <v-col>
-                  <v-img :src="require('../../assets/nucleo_logo.png')"
-                         class="ml-16"
-                         width="35%"
-                         @click="redirecionarNes">
-                  </v-img>
-                </v-col>
-              </v-row>
-            </v-col>
-          </v-row>
-        </v-card>
+      <v-col>
+        <v-icon size="26">mdi-clock-outline</v-icon>
+        {{ formatarHora(event.data_inicial)}} - {{ formatarHora(event.data_final) }}
       </v-col>
+      <v-btn @click="showDetails(event.id)" color="primary">Saiba Mais</v-btn>
     </v-row>
+  </v-col>
+</v-row>
+
+      </v-carousel-item>
+    </v-carousel>
+    <component :is="componenteDinamico"></component>
+      <v-row justify="center">
+        <v-btn @click="redirecionaEventos()" color="primary">Ver Mais</v-btn>
+      </v-row>
+    <spacer></spacer>
+    <v-footer class="black">
+      <v-container dark class="black white--text text-center">
+        <v-layout align-center justify-center class="icons-container">
+          <v-flex>
+            <v-btn icon class="mr-4">
+              <v-img :src="require('@/assets/home/agetic.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+            <v-btn icon class="mr-4">
+              <v-img :src="require('@/assets/home/nes.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+            <v-btn icon>
+              <v-img :src="require('@/assets/home/ufms.png')" max-height="45" max-width="35"></v-img>
+            </v-btn>
+          </v-flex>
+        </v-layout>
+        <spacer></spacer>
+        <v-card-text class="white--text">
+          UFMS - Universidade Federal de Mato Grosso do Sul <br>
+          NES - Núcleo de Práticas em Engenharia de Software <br>
+          AGETIC - Agência de Tecnologia da Informação e Comunicação
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-text class="white--text">
+          {{ new Date().getFullYear() }} — <strong>SIEVEN </strong>
+        </v-card-text>
+      </v-container>
+    </v-footer>
   </div>
 </template>
 
 <script>
-
+import apiEventos from '../../api/resources/evento.js'
+import ComponenteFilho from './cardList.vue';
 export default {
-  name: "pgPaginaInicialIndex",
+  name: "paginaInicial",
   data() {
     return {
-      sieven: [
-        { id: 1, titulo: 'Ensino', icone: 'mdi-school-outline', tamanho: '50%'},
-        { id: 2, titulo: 'Pesquisa', icone: 'mdi-magnify', tamanho: '70%'},
-        { id: 3, titulo: 'Extensão', icone: 'mdi-book-arrow-right-outline', tamanho: '90%'}
-      ]
-    }
-  },
-  methods: {
-    redirecionarAgetic() {
-      window.open("https://agetic.ufms.br/", "_blank")
-    },
-    redirecionarUfms() {
-      window.open("https://www.ufms.br/", "_blank")
-    },
-    redirecionarFacom() {
-      window.open("https://www.facom.ufms.br/", "_blank")
-    },
-    redirecionarNes() {
-      window.open("https://nes.facom.ufms.br/projeto/sieven-sistema-de-gestao-de-eventos", "_blank")
-    }
+
+      componenteDinamico: ComponenteFilho,
+      events: [],
+      items: [],
+
+    };
+
   },
   created() {
-    this.$store.dispatch('deslogar')
+    apiEventos.listarEventosPaginaInicial().then((response) => {
+      this.events = response.eventosDestaque
+    })
+  },
+  methods: {
+    showDetails(eventoId) {
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
+    }, 
+    redirecionaEventos() {
+      this.$router.push({name: 'eventos'})
+    },
+    formatarData(data) {
+      const parts = data.split(' ');
+      const dataPart = parts[0];
+      //eslint-disable-next-line
+      const [ano, mes, dia] = dataPart.split('-');
+      return `${dia}/${mes}`;
+    }, 
+    formatarHora(data) {
+      const partes = data.split(' ');
+      const horaParte = partes[1];
+      const [horas, minutos] = horaParte.split(':');
+      return `${horas}:${minutos}`;
+    }
   }
-}
+};
 </script>
 
 <style scoped>
-html, body {
-  height: 100%;
-  margin: 0px;
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
-#pgPaginaInicial {
-  height: 100vh;
-  width: 100vw;
-  background-image: url("../../assets/background-login.jpg");
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+
+.fixed-footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
 }
 </style>

@@ -48,10 +48,14 @@ const atividadeResource =
         })
     },
 
-    editarAtividades(atividadeId , atividadeData){
+    editarAtividades(token, atividadeId , atividadeData){
         return new Promise( (resolve, reject) =>
         {
-            apiUsuario.put(`/atividade/${atividadeId}` , atividadeData).then((res) =>
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.put(`/atividade/${atividadeId}` , atividadeData, { headers }).then((res) =>
             {   
                 resolve(res)
             }).catch( (error) =>
@@ -61,9 +65,12 @@ const atividadeResource =
         })
     },
 
-    deletarAtividade(atividadeId) {
+    deletarAtividade(token, atividadeId) {
         return new Promise((resolve, reject) => {
-          apiUsuario.delete(`/atividade/${atividadeId}`)
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+          apiUsuario.delete(`/atividade/${atividadeId}`, { headers })
             .then((res) => {
               resolve(res);
             })
