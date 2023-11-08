@@ -119,7 +119,8 @@
                          depressed
                          height="30"
                          width="130"
-                         color="#097FA8">
+                         color="#097FA8"
+                         click="">
                     Inscrever-se
                   </v-btn>
                 </v-col>
@@ -141,11 +142,10 @@
                           </v-icon>
                         </v-btn>
                       </template>
-                      <editar-atividade-dialog :editar="true"
+                      <editar-atividade-dialog
                                               :id="atividade.id"
                                               :atividade="atividade"
-                                              @editarAtividade="fecharAtividadeDialog"
-                                              @fecharEditarAtividadeDialog="fecharEditarAtividadeDialog">
+                                              @cancelarEditarAtividadeDialog="cancelarEditarAtividadeDialog">
                       </editar-atividade-dialog>
                     </v-dialog>
                   
@@ -191,13 +191,14 @@
 
           <atividade-dialog 
                             :id="atividade.id"
-                            :hora-fim="formatarHora(atividade.horario_inicio)"
-                            :hora-inicio="formatarHora(atividade.horario_inicio)"
+                            :hora-fim="atividade.horario_encerramento"
+                            :hora-inicio="atividade.horario_inicio"
                             :data="atividade.dataInicio"
                             :local="atividade.local"
                             :quantidade_vagas="atividade.quantidade_vagas"
                             :id_modalidade="atividade.id_modalidade"
                             :descricao="atividade.descricao"
+                            :atividade="atividade"
                             :nome="atividade.nome"
                             @fecharAtividadeDialog="fecharAtividadeDialog">
           </atividade-dialog>
@@ -280,21 +281,6 @@ export default {
       return dataFormatada;
     },
 
-    obterTipo(id_tipo){
-      const tipos = {
-        1: "Conferências",
-        2: "Seminários",
-        3: "Congressos",
-        4: "Workshops",
-        5: "Palestras",
-        6: "Culturais",
-        7: "Esportivos"  
-       }
-       const tipo = tipos[id_tipo]
-
-       return {tipo}
-
-  },
     exibirExcluirConfirmacao() {
       this.excluirDialogConfirmacao = true;
     },
@@ -391,7 +377,11 @@ export default {
     cancelarAtividade() {
       this.criarAtividadeDialog = false
     },
+    cancelarEditarAtividadeDialog(){
+      this.editarAtividadeDialog = false
+    },
     cancelarEditarAtividade(atividadeId) {
+      console.log("oi")
       this.atividades[atividadeId - 1].editarDialog = false
     },
     excluirAtividade(atividadeId) {

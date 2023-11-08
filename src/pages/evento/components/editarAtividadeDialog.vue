@@ -81,7 +81,7 @@
                 <v-col>
                 </v-col>
                 <v-col class="d-flex justify-end">
-                    <v-btn class="mr-4" color="black" width="150" outlined @click="cancelarAtividade">
+                    <v-btn class="mr-4" color="black" width="150" outlined @click="cancelarEditarAtividade">
                         Cancelar
                     </v-btn>
                     <v-btn style="color: white;" color="#097FA8" width="150" @click="editarAtividade">
@@ -133,6 +133,10 @@ export default {
         this.hora_fim = this.formatarHora(this.atividadeAtual.horario_encerramento)
     },
     methods: {
+
+      cancelarEditarAtividade() {
+        this.$emit('cancelarEditarAtividadeDialog'); // Emita o evento para fechar o diálogo
+      },
       formatarHora(hora) {
         const data = new Date(hora);
         const horaFormatada = data.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
@@ -237,19 +241,12 @@ export default {
         this.requisitoTexto = null
       }
     },
-    cancelarAtividade() {
-      if (this.editar){
-        this.$emit('cancelarEditarAtividade', this.id)
-      } else {
-        this.$emit('cancelarAtividade')
-      }
-    },
     adicionarAtividade() {
       if (this.atividadeAtual.descricao.length > 250) {
         alert('A descrição não pode ter mais de 250 caracteres.');
       } else {
         this.$emit('adicionarAtividade', this.atividade);
-  }
+      }
     },
     editarAtividade() {
       this.atividadeAtual.horario_inicio = `${this.data} ${this.hora_inicio}`;
