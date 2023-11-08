@@ -4,7 +4,7 @@
       <v-carousel-item v-for="(event, index) in events" :key="index">
         <v-row align="center" justify="center" class="fill-height">
   <v-col cols="12" md="4" class="text-center">
-    <v-img :src="event.imagem" class="rounded-lg" max-height="300"></v-img>
+    <v-img :src="'data:image/jpeg;base64,' + event.imagem" class="rounded-lg" max-height="300"></v-img>
   </v-col>
   <v-col cols="12" md="4" class="text-left">
     <h2 class="headline">{{ event.nome }}</h2>
@@ -26,9 +26,7 @@
       </v-carousel-item>
     </v-carousel>
     <component :is="componenteDinamico"></component>
-    <v-row justify="center">
-      <v-btn @click="showDetails(event.id)" color="primary">Ver Mais</v-btn>
-    </v-row>
+
     <spacer></spacer>
     <v-footer class="black">
   <v-container dark class="black white--text text-center">
