@@ -12,7 +12,7 @@
                     <label class="label-style" for="nome">Nome Completo</label>
                      <v-text-field class="campo-style"
                                 id="nome"
-                                v-model="nomeCompleto"
+                                v-model="inscricao.nome"
                                 placeholder="Nome Completo"
                                 outlined
                                 required>
@@ -24,7 +24,7 @@
                     <label class="label-style" for="cpf">CPF</label>
                      <v-text-field class="campo-style"
                                 id="cpf"
-                                v-model="cpf"
+                                v-model="inscricao.cpf"
                                 placeholder="Digite seu CPF"
                                 outlined
                                 required>
@@ -36,7 +36,7 @@
                     <label class="label-style" for="email">E-mail</label>
                      <v-text-field class="campo-style"
                                 id="cpf"
-                                v-model="email"
+                                v-model="inscricao.email"
                                 placeholder="Digite seu email"
                                 outlined
                                 required>
@@ -48,7 +48,7 @@
                     <label class="label-style" for="telefone">Telefone</label>
                      <v-text-field class="campo-style"
                                 id="telefone"
-                                v-model="telefone"
+                                v-model="inscricao.telefone"
                                 placeholder="Digite seu telefone"
                                 outlined
                                 required>
@@ -78,10 +78,13 @@
     },
     data() {
       return {
-        nomeCompleto: "",
-        cpf: "",
-        email: "",
-        telefone: "",
+        inscricao: {
+          nome: "",
+          cpf: "",
+          email: "",
+          telefone: "",
+          checkin: false,
+        }
       };
     },
     methods: {
@@ -91,16 +94,21 @@
       realizarInscricao() {
         // Validar os campos e realizar a inscrição
         if (this.$refs.form.validate()) {
-            apiInscricao.realizarInscricao().then(response => {
+
+          const inscricao = {
+            atividade_id : this.$route.params.id,
+            nome: this.inscricao.nome,
+            cpf: this.inscricao.cpf,
+            email: this.inscricao.email,
+            telefone: this.inscricao.telefone,
+            checkin: this.inscricao.checkin
+          }
+            apiInscricao.realizarInscricao(inscricao).then(response => {
                 console.log(response)
             })
           // Enviar os dados para o backend ou realizar a inscrição
           // Reinicialize os campos após a inscrição bem-sucedida
-          this.nomeCompleto = "";
-          this.cpf = "";
-          this.email = "";
-          this.telefone = "";
-          this.fecharDialog();
+          this.fecharInscricaoDialog();
         }
       },
     },

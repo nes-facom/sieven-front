@@ -2,11 +2,11 @@ import { apiUsuario } from './utilitario.js'
 
 const inscricaoResource =
 {
-    realizarInscricao()
+    realizarInscricao(params)
     {
         return new Promise( (resolve) =>
         {
-            apiUsuario.post(`/inscricao/criar-inscricao`).then( (res) =>
+            apiUsuario.post(`/inscricao/criar-inscricao`, params).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
