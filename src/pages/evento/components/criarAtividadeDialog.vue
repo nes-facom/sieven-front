@@ -38,8 +38,7 @@
         <v-col cols="12">
           <label class="label-style" for="capacidade">Capacidade</label>
           <v-text-field class="mb-0 pa-0"
-                        id="numeroParticipantes"
-                        label="Capacidade"
+                        id="capacidade"
                         type="number"
                         v-model="atividade.quantidade_vagas"
                         placeholder="Numero de Participantes"
