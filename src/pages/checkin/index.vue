@@ -50,14 +50,15 @@ export default {
           <v-col cols="12">
             <div v-for="(activity, index) in activities" :key="index" class="activity-card mb-4">
               <v-card>
-                <v-card-title class="text-h6">{{ activity.title }}</v-card-title>
+                <v-card-title class="text-h6">{{ activity.nome }}</v-card-title>
                 <v-card-text>
-                  <div><strong>Nome do Evento:</strong> {{ activity.eventName }}</div>
-                  <div><strong>Local:</strong> {{ activity.location }}</div>
-                  <div><strong>Data:</strong> {{ (activity.date) }}</div>
-                  <div><strong>Horário:</strong> {{ activity.time }}</div>
+                  <div><strong>Nome do Evento:</strong> {{ activity.nome }}</div>
+                  <div><strong>Local:</strong> {{ activity.local }}</div>
+                  <div><strong>Data:</strong> {{ (activity.horario_inicio) }}</div>
+                  <div><strong>Horário:</strong> {{ activity.horario_inicio }}</div>
                   <v-card-actions class="justify-end">
-                    <div align="center"><v-btn color="primary" @click="buttonClicked">Botão</v-btn></div>
+                    <div align="center"><v-btn class="mr-3" color="primary" @click="buttonClicked">Realizar Check-In</v-btn></div>
+                    <div align="center"><v-btn class="mr-3" color="error" @click="buttonClicked">Finalizar Check-In</v-btn></div>
                   </v-card-actions>
                 </v-card-text>
               </v-card>
@@ -71,34 +72,26 @@ export default {
 
 
 <script>
+import apiAtividades from '@/api/resources/atividade.js'
+import middleware from '@/middleware/localStorage.js'
 export default {
   name: "CheckInpage",
   data() {
     return {
-      activities: [
-        {
-          title: 'Atividade 1',
-          eventName: 'Evento 1',
-          location: 'Local 1',
-          date: '2023-11-15',
-          time: '10:00 AM',
-        },
-        {
-          title: 'Atividade 2',
-          eventName: 'Evento 2',
-          location: 'Local 2',
-          date: '2023-11-16',
-          time: '2:00 PM',
-        },
-        {
-          title: 'Atividade 3',
-          eventName: 'Evento 3',
-          location: 'Local 3',
-          date: '2023-11-17',
-          time: '4:30 PM',
-        },
-      ],
+      activities: [],
     };
   },
+  methods: {
+    carregaAtividades() {
+      apiAtividades.listarAtividadesCheckin(middleware.recuperarToken('token').access_token).then( (response) => {
+        this.activities = response
+        console.log(this.activities)
+      })
+    },
+  },
+
+  mounted() {
+    this.carregaAtividades()
+  }
 };
 </script>
