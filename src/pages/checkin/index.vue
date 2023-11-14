@@ -48,7 +48,7 @@ export default {
       <div class="activity-cards">
         <v-row>
           <v-col cols="12">
-            <div v-for="(activity, index) in activities" :key="index" class="activity-card mb-4">
+            <div v-for="(activity, id) in activities" :key="id" class="activity-card mb-4">
               <v-card>
                 <v-card-title class="text-h6">{{ activity.nome }}</v-card-title>
                 <v-card-text>
@@ -57,7 +57,7 @@ export default {
                   <div><strong>Data:</strong> {{ (activity.horario_inicio) }}</div>
                   <div><strong>Horário:</strong> {{ activity.horario_inicio }}</div>
                   <v-card-actions class="justify-end">
-                    <div align="center"><v-btn class="mr-3" color="primary" @click="buttonClicked">Realizar Check-In</v-btn></div>
+                    <div align="center"><v-btn class="mr-3" color="primary" @click="redirecionaCheckin(activity.id)">Realizar Check-In</v-btn></div>
                     <div align="center"><v-btn class="mr-3" color="error" @click="buttonClicked">Finalizar Check-In</v-btn></div>
                   </v-card-actions>
                 </v-card-text>
@@ -88,6 +88,9 @@ export default {
         console.log(this.activities)
       })
     },
+    redirecionaCheckin(idAtividade) {
+      this.$router.push({ name: 'checkin-atividade', params: { id: idAtividade } })
+    }
   },
 
   mounted() {
