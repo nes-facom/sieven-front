@@ -5,7 +5,7 @@
       <v-img
         :src="logo" 
         max-height="100"
-        max-width="400"
+        max-width="300"
         contain
       ></v-img>
     </v-row>

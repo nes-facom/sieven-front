@@ -11,9 +11,9 @@
       <template>
         <v-layout v-if="$store.getters.isAdmin">
           <v-row>
-            <v-col cols="2">
+            <div style="width: 13.125rem;">
               <barra-lateral></barra-lateral>
-            </v-col>
+            </div>
             <v-col>
               <v-main>
                 <router-view></router-view>
