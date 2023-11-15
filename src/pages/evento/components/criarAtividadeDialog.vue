@@ -7,13 +7,13 @@
         Criar Atividade
       </v-row>
 
-      <v-row class="mt-4">
+      <v-row class="mt-10">
         <v-col cols="12">
           <label class="label-style" for="nome">Nome</label>
           <v-text-field class="campo-style"
                         id="nome"
                         v-model="atividade.nome"
-                        placeholder="Titulo do evento"
+                        placeholder="Titulo da Atividade"
                         :rules="requiredRule('Nome')"
                         outlined>
           </v-text-field>
@@ -29,9 +29,6 @@
                             :rules="requiredRule('Descrição')"
                             outlined>
           </v-textarea>
-          <span class="char-count">
-            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
-          </span>
         </v-col>
       </v-row>
       <v-row>  
@@ -48,11 +45,8 @@
         </v-col>
       </v-row> 
 
-          <div class="mt-0"
-               style="color: grey">
-            Modalidade
-          </div>
-          <v-radio-group class="mt-0" v-model="atividade.id_modalidade" row @change="handleRadioChange">
+      <label class="label-style" for="radio">Modalidade</label>
+          <v-radio-group class="mt-0" v-model="atividade.id_modalidade" row @change="handleRadioChange" id="radio">
             <v-radio value="presencial">
               <template v-slot:label>
                 <div>Presencial</div>
@@ -66,6 +60,7 @@
           </v-radio-group>
           <v-row>
             <v-col >
+              <label class="label-style" for="data">Data</label>
               <v-text-field
                 id="data"
                 v-model="data"
@@ -77,7 +72,9 @@
               ></v-text-field>
             </v-col>
             <v-col cols="3">
+              <label class="label-style" for="horaInicio">Hora do Inicio</label>
               <v-text-field
+                id="horaInicio"
                 v-model="horaInicio"
                 placeholder="Hora Inicio"
                 @horaSelecionada="selecaoHora"
@@ -87,7 +84,9 @@
             ></v-text-field>
             </v-col>
             <v-col cols="3">
+              <label class="label-style" for="horaFim">Hora do Fim</label>
               <v-text-field
+                id="horaFim"
                 v-model="horaFim"
                 placeholder="Hora Final"
                 @horaSelecionada="selecaoHora"
@@ -111,13 +110,12 @@
           </v-row>
         <v-row>  
         <v-col cols="12">
-          <label class="label-style" for="cateogria">Categoria</label>
+          <label class="label-style" for="categoria">Categoria</label>
           <v-select
                 v-model="selectedCategoria"
                 :items="categorias"
                 item-value="id" 
                 item-text="nome_categoria"
-                label="Categoria"
                 :rules="requiredRule('Categoria')"
                 outlined
           ></v-select> 
@@ -131,7 +129,6 @@
                   :items="tipos"
                   item-value="id" 
                   item-text="nome_tipo"
-                  label="Tipo"
                   :rules="requiredRule('Tipo')"
                   outlined
               ></v-select>
