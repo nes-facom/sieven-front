@@ -25,6 +25,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
+            throw err
         })
     },
     patch(url, parameters, config)

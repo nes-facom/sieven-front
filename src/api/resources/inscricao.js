@@ -8,20 +8,7 @@ const inscricaoResource =
             Authorization: 'Bearer ' + token
         };
 
-        return new Promise( (resolve, reject) =>
-        {
-            apiUsuario.put(url, null, { headers }).then( (res) =>
-            {
-                resolve(res.data)
-                
-            }).catch(err =>
-            {
-                if(err.response.status === 401) 
-                {
-                    reject(err)
-                }
-            })
-        })
+        return apiUsuario.put(url, null, { headers }).then( (res) => res.data)
     }
 }
 

@@ -27,6 +27,17 @@
           </div>
         </v-col>
       </v-row>
+
+      <!-- Snackbar para mensagens de sucesso -->
+      <v-snackbar v-model="snackbar.success" color="success">
+        Check-in realizado com sucesso!
+      </v-snackbar>
+
+      <!-- Snackbar para mensagens de erro -->
+      <v-snackbar v-model="snackbar.error" color="error">
+        Não foi possível realizar seu check-in.
+      </v-snackbar>
+
     </v-container>
   </div>
 </template>
@@ -49,22 +60,36 @@ export default {
       dataDaAtividade: "01/01/2023",
       horarioDaAtividade: "14:00 - 16:00",
       localDaAtividade: "Local X",
-      valor: null
+      valor: null,
+      snackbar: {
+        success: false,
+        error: false,
+        info: false
+      },
     };
   },
   methods: {
     salvar(resultado) {
       this.valor = resultado
     },
-    onDetect (detectedCodes) {
+    onDetect(detectedCodes) {
       detectedCodes.then((result) => {
-      const content = result.content
-      apiInscricao.checkin(content, middleware.recuperarToken('token').access_token).then((res) => {
-        console.log(res)
+        const content = result.content;
+        apiInscricao.checkin(content, middleware.recuperarToken('token').access_token).then((res) => {
+          if(res.status === 200) {
+            this.snackbar.success = true;
+          } else if (res.status === 404) {
+            this.snackbar.error = true;
+          } else if (res.status === 400) {
+            console.log('info')
+            this.snackbar.info
+          }
+      
+          this.snackbar.success = true;
+        }).catch(() => {
+          this.snackbar.error = true;
+        });
       })
-      }).catch((error) => {
-        console.error('Error:', error);
-      });
     },
     async inicializar(promise) {
       try {
