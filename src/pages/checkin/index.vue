@@ -30,25 +30,25 @@ export default {
         <v-row>
           <v-col cols="12" sm="6">
             <v-text-field v-model="searchTerm" label="Pesquisar por evento, atividade ou local" outlined
-              append-icon="mdi-magnify" @input="filterActivities"></v-text-field>
+              append-icon="mdi-magnify" @input="buscarAtividades"></v-text-field>
           </v-col>
           <v-col cols="6" sm="2">
             <v-text-field v-model="dateFilter" label="Data" outlined append-icon="mdi-calendar"
-              @input="filterActivities"></v-text-field>
+              @input="buscarAtividades"></v-text-field>
           </v-col>
           <v-col cols="6" sm="2">
             <v-text-field v-model="timeFilter" label=" Horário" outlined append-icon="mdi-clock"
-              @input="filterActivities"></v-text-field>
+              @input="buscarAtividades"></v-text-field>
           </v-col>
           <v-col cols="6" sm="2">
-            <v-btn style="width: 100%; height:63%">Buscar</v-btn>
+            <v-btn style="width: 100%; height:63%" @click="buscarAtividades">Buscar</v-btn>
           </v-col>
         </v-row>
       </div>
       <div class="activity-cards">
         <v-row>
           <v-col cols="12">
-            <div v-for="(activity, id) in activities" :key="id" class="activity-card mb-4">
+            <div v-for="(activity, id) in filteredActivities" :key="id" class="activity-card mb-4">
               <v-card>
                 <v-card-title class="text-h6">{{ activity.nome }}</v-card-title>
                 <v-card-text>
@@ -79,22 +79,42 @@ export default {
   data() {
     return {
       activities: [],
+      searchTerm: '',
+      dateFilter: '',
+      timeFilter: '',
     };
+  },
+  computed: {
+    filteredActivities() {
+      return this.activities.filter(activity => {
+        const nomeMatch = activity.nome && activity.nome.toLowerCase().includes(this.searchTerm.toLowerCase());
+        const dataMatch = activity.horario_inicio && activity.horario_inicio.includes(this.dateFilter);
+        const horarioMatch = activity.horario_inicio && activity.horario_inicio.includes(this.timeFilter);
+
+        return nomeMatch && dataMatch && horarioMatch;
+      });
+    },
   },
   methods: {
     carregaAtividades() {
-      apiAtividades.listarAtividadesCheckin(middleware.recuperarToken('token').access_token).then( (response) => {
-        this.activities = response
-        console.log(this.activities)
-      })
+      apiAtividades.listarAtividadesCheckin(middleware.recuperarToken('token').access_token).then((response) => {
+        this.activities = response;
+      });
     },
     redirecionaCheckin(idAtividade) {
-      this.$router.push({ name: 'checkin-atividade', params: { id: idAtividade } })
-    }
+      this.$router.push({ name: 'checkin-atividade', params: { id: idAtividade } });
+    },
   },
-
+  watch: {
+    // Assista a mudanças nos campos de pesquisa e carregue atividades filtradas
+    searchTerm: 'carregaAtividades',
+    dateFilter: 'carregaAtividades',
+    timeFilter: 'carregaAtividades',
+  },
   mounted() {
-    this.carregaAtividades()
-  }
+    // Carregue as atividades ao iniciar o componente
+    this.carregaAtividades();
+  },
 };
+
 </script>

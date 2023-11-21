@@ -29,6 +29,9 @@
           </v-card>
         </v-col>
       </v-row>
+      <v-row justify="center">
+        <v-btn @click="redirecionaEventos()" color="primary">Ver Mais</v-btn>
+      </v-row>
     </v-container>
   </v-container>
 </template>
@@ -63,7 +66,9 @@ export default {
     toggleDetails(item) {
       item.showDetails = !item.showDetails;
     }, 
-
+    showDetails(eventoId) {
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
+    }, 
     formatarDataAbreviada(value) {
       const mesesAbreviados = ["JAN", "FEV", "MAR", "ABR", "MAI", "JUN", "JUL", "AGO", "SET", "OUT", "NOV", "DEZ"];
       const partes = value.split(" ")[0].split("-");
