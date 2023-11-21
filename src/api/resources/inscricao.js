@@ -4,16 +4,7 @@ const inscricaoResource =
 {
     realizarInscricao(params)
     {
-        return new Promise( (resolve) =>
-        {
-            apiUsuario.post(`/inscricao/criar-inscricao`, params).then( (res) =>
-            {
-                resolve(res.data)
-            }).catch( () =>
-            {
-
-            })
-        })
+        return apiUsuario.post(`/inscricao/criar-inscricao`, params).then( (res) => res.data)
     },
 }
 

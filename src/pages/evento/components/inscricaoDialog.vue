@@ -27,7 +27,7 @@
       <v-row class="mt-2">
         <v-col cols="12">
           <label class="label-style" for="email">E-mail</label>
-          <v-text-field class="campo-style" id="email" v-model="inscricao.email" placeholder="Digite seu email" outlined
+          <v-text-field class="campo-style" id="email" v-model="inscricao.email"  placeholder="Digite seu email" outlined
             required>
           </v-text-field>
         </v-col>
@@ -117,17 +117,16 @@
     </v-dialog>
     <v-dialog v-if="cpfCadastrado" v-model="cpfCadastrado" max-width="400">
       <v-card>
-        <v-card-title class="text-h5 font-roboto d-flex justify-center" style="color: #ff0000">
+        <v-card-title class="text-h5 font-roboto d-flex justify-center" style="color: #097fa8">
           CPF já cadastrado!
         </v-card-title>
         <v-card-text>
           <div class="mt-2">
-            Não foi possível realizar a inscrição. O CPF informado já está inscrito nessa atividade com o email
-            {{ inscricao.email.length > 2 ? inscricao.email.substring(0, 2) + '*'.repeat(inscricao.email.length - 2) : '' }}.
+            {{ emailMask(inscricao.email)}}.
           </div>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
-          <v-btn style="color: #ff0000" @click="fecharCpfCadastrado" color="white">OK</v-btn>
+          <v-btn style="color: #097fa8" @click="fecharCpfCadastrado" color="white">OK</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -154,11 +153,13 @@ export default {
         telefone: "",
         checkin: false,
       },
+
       inscricaoDialogConfirmacao: false,
       inscricaoConfirmada: false,
       mensagemErro: "",
       snackbar: false,
       cpfCadastrado: false,
+     
     };
   },
 
@@ -167,13 +168,18 @@ export default {
   },
 
   methods: {
+    emailMask(email){
+      const emailParts = email.split('@')
+      const primeiroCaracteres = emailParts[0].substring(0, 4);
+      const servidorEmail = emailParts[1];
 
+      return `Não foi possível realizar a inscrição. O CPF informado já está inscrito nessa atividade com o email ${primeiroCaracteres}****@${servidorEmail}.`
+    },
     fecharCpfCadastrado() {
-    this.cpfCadastrado = false;
+      this.cpfCadastrado = false;
+      this.inscricaoDialogConfirmacao = false;
     },
     fecharInscricaoConfirmacao() {
-
-
       this.inscricaoDialogConfirmacao = false;
     },
 
@@ -194,11 +200,11 @@ export default {
     },
 
     exibirMensagemErro() {
-        this.snackbar = true;
-        setTimeout(() => {
-          this.snackbar = false;
-        }, 5000);
-      
+      this.snackbar = true;
+      setTimeout(() => {
+        this.snackbar = false;
+      }, 5000);
+
     },
 
 
@@ -221,24 +227,23 @@ export default {
           checkin: this.inscricao.checkin,
         };
         apiInscricao.realizarInscricao(inscricao)
-      .then((response) => {
-        console.log(response.status)
-        if (response.status === 200){
-          this.inscricaoConfirmada = true;
-        } else if(response.status === 401){
-          this.cpfCadastrado = true;
-        }
+          .then((response) => {
+            if(response.status=== 200){
+              this.inscricaoConfirmada = true;
+            }else if(response.status === 402){
+              this.cpfCadastrado =  true;
+            }
+            
+          }).catch((err)=> {
+            console.log(err)
+            this.cpfCadastrado =  true;
+           
       })
-      .catch((error) => {
-        if (error.response.status === 401) {
-         error.response.status === 401
-        } 
-        
-      });
 
+          }
 
-      }
-    },
+          
+      },
     formatarHora(hora) {
       const data = new Date(hora);
       const horaFormatada = data.toLocaleTimeString("pt-BR", {
