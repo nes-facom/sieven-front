@@ -35,11 +35,12 @@
       </v-card>
 
 
-      <v-dialog v-if="this.$store.getters.isEditor"
+      <v-dialog 
                 v-model="criarEventoDialog"
                 width="700">
         <template v-slot:activator="{ on, attrs }">
-          <v-btn color="primary"
+          <v-btn v-if="isAdmin"
+                color="primary"
                  large
                  fixed
                  right
@@ -64,6 +65,7 @@
 import moment from 'moment'
 import criarEventoDialog from '@/pages/eventos/components/criarEventoDialog.vue'
 import apiEventos from '../../api/resources/evento.js'
+import { mapGetters } from 'vuex';
 
 export default {
   name: "pgEventosIndex",
@@ -75,7 +77,16 @@ export default {
       
 
     }
-  },  
+  },
+
+  computed: {
+    ...mapGetters(['isAdmin']), // Mapeia o estado de isAdmin do Vuex
+    userName() {
+      // Obtenha o nome do usuário a partir da autenticação, por exemplo
+      return 'Nome do Usuário'; // Substitua pelo nome real do usuário
+    },
+  },
+  
   created() {
     apiEventos.listarEventos().then((response) => {
       this.eventos = response

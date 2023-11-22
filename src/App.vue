@@ -6,11 +6,10 @@
             <barra-superior></barra-superior>
           </v-col>
         </v-row>
-
-        <v-layout v-if="this.$store.getters.getLogado">
+      <v-layout v-if="this.$store.getters.isAdmin">
           <v-row>
             <v-col cols="2">
-              <barra-lateral v-if="this.$store.getters.getLogado">
+              <barra-lateral v-if="this.$store.getters.isAdmin">
               </barra-lateral>
             </v-col>
             <v-col>
@@ -30,6 +29,7 @@
             </v-col>
           </v-row>
         </v-layout>
+        
     </div>
   </v-app>
 </template>
@@ -37,14 +37,10 @@
 <script>
 import barraSuperior from '@/layout/barraSuperior.vue'
 import barraLateral from '@/layout/barraLateral.vue'
+
 export default {
   name: 'App',
   components: { barraSuperior, barraLateral },
-  beforeCreate() {
-    if (this.$store.getters.getLogado != true) {
-      this.$router.push({ name: 'paginaInicial' })
-    }
-  }
 }
 </script>
 
