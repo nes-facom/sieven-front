@@ -79,7 +79,9 @@ export default {
     })
   },
   methods: {
-    
+    showDetails(eventoId) {
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
+    },
     redirecionaEventos() {
       this.$router.push({name: 'eventos'})
     },

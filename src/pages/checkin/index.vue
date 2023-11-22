@@ -1,28 +1,3 @@
-<!-- <template>
-  <div id="pgValidador">
-    <qrcode-vue :value="identificador"
-                size="500">
-    </qrcode-vue>
-  </div>
-</template>
-
-<script>
-import QrcodeVue from 'qrcode.vue'
-export default {
-  name: "pgValidadorIndex",
-  components: { QrcodeVue },
-  data() {
-    return {
-      identificador: 'error'
-    }
-  }
-}
-</script>
-
-<style>
-
-</style> -->
-
 <template>
   <div>
     <v-container>
@@ -32,16 +7,13 @@ export default {
             <v-text-field v-model="searchTerm" label="Pesquisar por evento, atividade ou local" outlined
               append-icon="mdi-magnify" @input="buscarAtividades"></v-text-field>
           </v-col>
-          <v-col cols="6" sm="2">
+          <v-col cols="6" sm="3">
             <v-text-field v-model="dateFilter" label="Data" outlined append-icon="mdi-calendar"
               @input="buscarAtividades"></v-text-field>
           </v-col>
-          <v-col cols="6" sm="2">
+          <v-col cols="6" sm="3">
             <v-text-field v-model="timeFilter" label=" Horário" outlined append-icon="mdi-clock"
               @input="buscarAtividades"></v-text-field>
-          </v-col>
-          <v-col cols="6" sm="2">
-            <v-btn style="width: 100%; height:63%" @click="buscarAtividades">Buscar</v-btn>
           </v-col>
         </v-row>
       </div>
@@ -88,6 +60,7 @@ export default {
     filteredActivities() {
       return this.activities.filter(activity => {
         const nomeMatch = activity.nome && activity.nome.toLowerCase().includes(this.searchTerm.toLowerCase());
+        
         const dataMatch = activity.horario_inicio && activity.horario_inicio.includes(this.dateFilter);
         const horarioMatch = activity.horario_inicio && activity.horario_inicio.includes(this.timeFilter);
 
@@ -106,13 +79,11 @@ export default {
     },
   },
   watch: {
-    // Assista a mudanças nos campos de pesquisa e carregue atividades filtradas
     searchTerm: 'carregaAtividades',
     dateFilter: 'carregaAtividades',
     timeFilter: 'carregaAtividades',
   },
   mounted() {
-    // Carregue as atividades ao iniciar o componente
     this.carregaAtividades();
   },
 };
