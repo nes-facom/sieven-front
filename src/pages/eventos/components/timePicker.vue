@@ -34,7 +34,7 @@ export default {
   data() {
     return {
       menu: false,
-      hora: null
+      hora: null,
     }
   },
   methods: {

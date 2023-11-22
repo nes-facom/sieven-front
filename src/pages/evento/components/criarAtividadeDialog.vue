@@ -63,16 +63,24 @@
           </v-row>
           <v-row>
             <v-col>
-              <time-picker label="Hora de Início"
-                           campo="horaInicio"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="atividade.horaInicio"
+                placeholder="Hora de Início"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaInicio')"
+            ></v-text-field>
             </v-col>
             <v-col>
-              <time-picker label="Hora de Fim"
-                           campo="horaFim"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+              <v-text-field
+                v-model="atividade.horaFinal"
+                placeholder="Hora Final"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaFim')"
+            ></v-text-field>
             </v-col>
           </v-row>
         </v-col>
@@ -80,18 +88,38 @@
         <v-divider class="mx-4"
                    vertical>
         </v-divider>
-
+        
         <v-col cols="6">
+          <v-select
+                v-model="selectedCategoria"
+                :items="categorias"
+                item-value="id" 
+                item-text="nome_categoria"
+                label="Categoria"
+                outlined
+              ></v-select> 
+              <v-select
+                  v-model="selectedTipo"
+                  :items="tipos"
+                  item-value="id" 
+                  item-text="nome_tipo"
+                  label="Tipo"
+                  outlined
+              ></v-select>
           <v-text-field label="Palestrante"
                         v-model="atividade.palestrante"
                         outlined>
           </v-text-field>
           <v-textarea label="Descrição"
                       v-model="atividade.descricao"
-                      height="142"
                       auto-grow
-                      outlined>
+                      maxLength="255"
+                      outlined
+                      @input="limitarDescricao">
           </v-textarea>
+          <span class="char-count">
+            ({{ atividade.descricao ? 255 - atividade.descricao.length : 255 }} caracteres restantes)
+          </span>
           <v-text-field label="Requisitos"
                         v-model="requisitoTexto"
                         @keydown.enter="adicionarRequisito"
@@ -131,7 +159,7 @@
           <v-btn style="color: white;"
                  color="#097FA8"
                  width="150"
-                 @click="adicionarAtividade">
+                 @click="adicionarEvento">
             {{ this.mensagemConfirmacao() }}
           </v-btn>
         </v-col>
@@ -141,9 +169,12 @@
 </template>
 
 <script>
- import axios from 'axios'
+
+import apiAtividade from '../../../api/resources/atividade.js'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
 import timePicker from '@/pages/eventos/components/timePicker.vue'
+import apiTipo from '../../../api/resources/tipo.js'
+import apiCategoria from '../../../api/resources/categoria.js'
 
 export default {
   name: "pgCriarAtividadeDialogIndex",
@@ -161,16 +192,61 @@ export default {
         horario_inicio : null,
         horario_encerramento : null,
         palestrante: null,
+        tipo: null,
+        categoria: null,
         descricao: null,
-        modalidade: 'presencial',
+        modalidade: null,
         requisitos: [],
         situacao : 'Ativa',
-        evento_id: 1
+        evento_id: null
       },
+
+      tipos: [],
+      selectedTipo: null,
+
+      categorias: [],
+      selectedCategoria: null,
       requisitoTexto: null
     }
   },
+  created() {
+    this.carregaTipos()
+    this.carregaCategorias()
+  },
   methods: {
+    validateHora(field) {
+      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+      if (timeRegex.test(this.atividade[field])) {
+        //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
+        return this.atividade[field]
+      } else {
+        // Clear the input if the format is not valid when losing focus
+        this.atividade[field] = '';
+      }
+    },
+    getCurrentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    },
+    carregaTipos() {
+      apiTipo.listarTipos().then(
+        (respostaTipo) => {
+          this.tipos = respostaTipo
+        }
+      )
+    },
+    carregaCategorias(){
+      apiCategoria.listarCategorias().then(
+        (respostaCategoria) => {
+          this.categorias = respostaCategoria
+        }
+      )
+    },
     mensagemConfirmacao() {
       if (this.editar) {
         return "Editar Atividade"
@@ -209,7 +285,11 @@ export default {
       }
     },
     adicionarAtividade() {
-      this.$emit('adicionarAtividade', this.atividade)
+      if (this.atividade.descricao.length > 250) {
+        alert('A descrição não pode ter mais de 250 caracteres.');
+      } else {
+        this.$emit('adicionarAtividade', this.atividade);
+  }
     },
     adicionarEvento() {
       this.atividade.horario_inicio = `${this.atividade.dataInicio} ${this.atividade.horaInicio}`;
@@ -223,20 +303,40 @@ export default {
       formData.append('horario_inicio',  this.atividade.horario_inicio);
       formData.append('horario_encerramento', this.atividade.horario_encerramento);
       formData.append('palestrante',  this.atividade.palestrante);
+      formData.append('id_categoria', this.selectedCategoria)
+      formData.append('id_tipo', this.selectedTipo)
+      formData.append('id_modalidade', this.atividade.modalidade === 'presencial' ? 1 : 2);
       formData.append('quantidade_vagas',  this.atividade.numeroParticipantes);
       formData.append('evento_id', this.$route.params.eventoId);
       formData.append('situacao ', this.atividade.situacao);
+     /* const atividade = {
+        nome: this.atividade.nome,
+        descricao: this.atividade.descricao,
+        local: this.atividade.local,
+        horario_inicio: this.atividade.horario_inicio,
+        horario_encerramento: this.atividade.horario_encerramento,
+        palestrante: this.atividade.palestrante,
+        id_modalidade: this.atividade.id_modalidade,
+        numeroParticipantes: this.atividade.numeroParticipantes,
+        evento_id: this.$route.params.eventoId,
+        situacao: this.atividade.situacao
+      }*/
 
 
-      axios.post(`http://127.0.0.1/atividades/`, formData)
+      apiAtividade.cadastrarAtividade(formData)
           .then( (response) => {
-            console.log(response.data);
-            window.location.reload();
+            console.log(formData);
+             this.$router.push({ name: 'eventos' })
           })
           .catch(error => {
             console.error(error);
           });
-    }
+    },
+    limitarDescricao() {
+    if (this.atividade.descricao && this.atividade.descricao.length > 255) {
+      this.atividade.descricao = this.atividade.descricao.slice(0, 255);
+      }
+    },
   },
   props: {
     editar: {

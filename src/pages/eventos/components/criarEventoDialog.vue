@@ -1,23 +1,35 @@
 <template>
   <div id="pgCriarEventoDialog">
     <v-card class="pa-10"
-            width="1000">
-      <v-row justify="center"
-             class="text-h2 font-weight-bold"
-             style="color: #097FA8">
-        Crie seu evento
-      </v-row>
+            width="700">
+      <div class="text-h4 font-roboto" style="color: #097FA8">
+        Criar Evento
+      </div>
 
-      <v-row class="mt-10">
-        <v-col>
-          <v-text-field label="Nome"
+      <v-row class="mt-4">
+        <v-col cols="12">
+          <label class="label-style" for="nome">Nome</label>
+          <v-text-field class="campo-style"
+                        id="nome"
                         v-model="evento.nome"
+                        placeholder="Titulo do evento"
+                        :rules="requiredRule('Nome')"
                         outlined>
           </v-text-field>
-          <v-text-field label="Local"
-                        v-model="evento.local"
-                        outlined>
-          </v-text-field>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <label class="label-style" for="desricao">Descrição</label>
+          <v-textarea class="campo-style" id="descricao"
+                            v-model="evento.descricao"
+                            placeholder="Descrição sobre o evento" 
+                            auto-grow 
+                            :rules="requiredRule('Descrição')"
+                            outlined>
+          </v-textarea>
+        </v-col>
+      </v-row>
           <v-row>
             <v-col>
               <data-picker label="Data de Início"
@@ -26,65 +38,61 @@
               </data-picker>
             </v-col>
             <v-col>
+              <v-text-field
+                v-model="evento.horaInicio"
+                placeholder="Hora Inicio"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaInicio')"
+            ></v-text-field>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col>
               <data-picker label="Data de Fim"
                            campo="dataFim"
                            @dataSelecionada="selecaoData">
               </data-picker>
             </v-col>
+            <v-col>
+              <v-text-field
+                v-model="evento.horaFinal"
+                placeholder="Hora Final"
+                @horaSelecionada="selecaoHora"
+                v-mask="'##:##'"
+                outlined
+                @blur="validateHora('horaFinal')"
+            ></v-text-field>
+            </v-col>
           </v-row>
           <v-row>
-            <v-col>
-              <time-picker label="Hora de Início"
-                           campo="horaInicio"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
-            </v-col>
-            <v-col>
-              <time-picker label="Hora de Fim"
-                           campo="horaFim"
-                           @horaSelecionada="selecaoHora">
-              </time-picker>
+            <v-col cols="12">
+            <label class="label-style" for="local">Local</label>
+            <v-text-field class="campo-style" 
+                          id="local"
+                          v-model="evento.local"
+                          :rules="requiredRule('Local')"
+                          placeholder="Local do Evento"
+                          outlined>
+            </v-text-field>
             </v-col>
           </v-row>
-        </v-col>
 
-        <v-divider class="mx-4"
-                   vertical>
-        </v-divider>
-
-        <v-col cols="6">
-          <v-textarea label="Descrição"
-                      v-model="evento.descricao"
-                      auto-grow
-                      outlined>
-          </v-textarea> 
-          <v-select
-              v-model="selectedCategoria"
-              :items="categorias"
-              item-value="id" 
-              item-text="nome_categoria"
-              label="Categoria"
-              outlined
-          ></v-select> 
-          <v-select
-              v-model="selectedTipo"
-              :items="tipos"
-              item-value="id" 
-              item-text="nome_tipo"
-              label="Tipo"
-              outlined
-          ></v-select> 
+        <v-row>
+          <v-col cols="12" class="text-left">
           <v-file-input label="Imagem"
                         v-model="selectedImage"
-                        prepend-icon="mdi-camera"
                         accept="image/png"
+                        prepend-icon="mdi-camera"
                         placeholder="Selecione a imagem banner do evento"
                         :rules="regrasImagem"
                         outlined
-                        @change="handleImageUpload">
+                        @change="handleImageUpload"
+                        hide-details>
           </v-file-input>
-        </v-col>
-      </v-row>
+          </v-col>
+        </v-row>
       <v-row>
         <v-col>
         </v-col>
@@ -109,38 +117,30 @@
 </template>
 
 <script>
-import apiTipo from '../../../api/resources/tipo.js'
-import apiCategoria from '../../../api/resources/categoria.js'
 import apiEvento from '../../../api/resources/evento.js'
-
+import { VueMaskDirective } from "v-mask";
+import Vue from 'vue'
 import dataPicker from '@/pages/eventos/components/dataPicker.vue'
-import timePicker from '@/pages/eventos/components/timePicker.vue'
+//import timePicker from '@/pages/eventos/components/timePicker.vue'
 export default {
   name: "pgCriarEventoDialogIndex",
-  components: { dataPicker, timePicker },
+  components: { dataPicker },
   data() {
     return {
       evento: {
         nome: null,
         descricao: null,
-        tipo: null,
         local: null,
         dataInicio: null,
-        horaInicio: null,
+        dataFim: null,
         horario_inicio : null,
         horario_encerramento : null,
-        dataFim: null,
-        horaFim: null,
-        categoria: null,
+        horaInicio: null,
+        horaFinal: null,
         base64Image: null,
         created_by_user: 1,
       },
       selectedImage: null,
-      tipos: [],
-      selectedTipo: null,
-
-      categorias: [],
-      selectedCategoria: null,
 
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
@@ -148,23 +148,30 @@ export default {
     }
   },
   created() {
-    this.carregaTipos()
-    this.carregaCategorias()
+    Vue.directive("mask", VueMaskDirective);
   },
   methods: {
-    carregaTipos() {
-      apiTipo.listarTipos().then(
-        (respostaTipo) => {
-          this.tipos = respostaTipo
-        }
-      )
+    validateHora(field) {
+      const timeRegex = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+
+      if (timeRegex.test(this.evento[field])) {
+        //const formattedTime = `${this.getCurrentDate()} ${this.evento[field]}:00`;
+        return this.evento[field]
+      } else {
+        // Clear the input if the format is not valid when losing focus
+        this.evento[field] = '';
+      }
     },
-    carregaCategorias(){
-      apiCategoria.listarCategorias().then(
-        (respostaCategoria) => {
-          this.categorias = respostaCategoria
-        }
-      )
+    getCurrentDate() {
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+
+      return `${year}-${month}-${day}`;
+    },
+    requiredRule(fieldName) {
+      return [(v) => !!v || `${fieldName} é obrigatório.`];
     },
 
     fecharCriarEventoDialog() {
@@ -205,14 +212,12 @@ export default {
     adicionarEvento() {
 
       this.evento.horario_inicio = `${this.evento.dataInicio} ${this.evento.horaInicio}`;
-      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFim}`;
+      this.evento.horario_encerramento = `${this.evento.dataFim} ${this.evento.horaFinal}`;
 
       const evento = 
       {
         nome: this.evento.nome,
         descricao: this.evento.descricao,
-        id_categoria: this.selectedCategoria,
-        id_tipo: this.selectedTipo,
         local: this.evento.local,
         data_inicial: this.evento.horario_inicio,
         data_final: this.evento.horario_encerramento,
@@ -225,12 +230,27 @@ export default {
       apiEvento.cadastrarEvento(evento).then( () => {
         console.log(evento)
       })
-      
+      this.$emit("fecharCriarEventoDialog")
     }
   }
 }
 </script>
 
 <style>
+.label-style {
+  font-family: 'Roboto', sans-serif;
+  font-weight: bold;
+  color: #888; 
+}
 
+
+.campo-style {
+  font-family: 'Roboto', sans-serif;
+  font-weight: normal;
+  color: black; 
+}
+
+.v-file-input .v-icon--link {
+  display: none ;
+}
 </style>
