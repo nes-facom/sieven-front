@@ -39,7 +39,7 @@ export default {
       barraLateral: [
         { id: 1, titulo: 'Eventos', icone: 'mdi-ticket-confirmation-outline', link: 'eventos' },
         { id: 2, titulo: 'Check-In', icone: 'mdi-qrcode-scan', link: 'checkin' },
-        { id: 3, titulo: 'Relatório', icone: 'mdi-shield-crown-outline', link: 'checkin-inscricao' },
+        { id: 3, titulo: 'Relatório', icone: 'mdi-shield-crown-outline', link: 'registro' },
       ]
     }
   },

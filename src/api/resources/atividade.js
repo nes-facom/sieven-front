@@ -95,7 +95,22 @@ const atividadeResource =
               reject(error);
             });
         });
-      }
+      },
+      gerarRelatorio(token, atividadeId) {
+        return new Promise((resolve, reject) => {
+          const headers = {
+            Authorization: 'Bearer ' + token,
+          };
+    
+          apiUsuario.get(`/atividade/${atividadeId}/gerar-relatorio`, { headers, responseType: 'blob' })
+            .then((res) => {
+              resolve(res);
+            })
+            .catch((error) => {
+              reject(error);
+            });
+        });
+      },
 }
 
 
