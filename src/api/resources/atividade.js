@@ -35,6 +35,23 @@ const atividadeResource =
         })
     },
 
+    listarAtividadesCheckin(token)
+    {
+        const headers = {
+            Authorization: 'Bearer ' + token
+        };
+        return new Promise( (resolve) =>
+        {
+            apiUsuario.get(`/atividade`, { headers }).then( (res) =>
+            {
+                resolve(res.data)
+            }).catch( () =>
+            {
+
+            })
+        })
+    },
+
     visualizarAtividades(atividadeId){
         return new Promise( (resolve) =>
         {

@@ -4,8 +4,8 @@ import Registro from '@/pages/registro/index.vue'
 import Eventos from '@/pages/eventos/index.vue'
 import Evento from '@/pages/evento/index.vue'
 import Inscricoes from '@/pages/inscricoes/index.vue'
-import Validador from '@/pages/validador/index.vue'
-import Admin from '@/pages/admin/index.vue'
+import Checkin from '@/pages/checkin/index.vue'
+import CheckinInscricao from '@/pages/checkin-inscricao/index.vue'
 import PaginaLogin from '@/pages/login/index.vue'
 import jwtDecode from 'jwt-decode'
 // import Vue from 'vue'
@@ -46,14 +46,14 @@ const router = new VueRouter({
           component: Evento,
       },
       {
-          path: '/validador',
-          name: 'validador',
-          component: Validador,
+          path: '/checkin',
+          name: 'checkin',
+          component: Checkin,
       },
       {
-          path: '/admin',
-          name: 'admin',
-          component: Admin,
+          path: '/checkin/atividade/:id',
+          name: 'checkin-atividade',
+          component: CheckinInscricao,
       },
     ]
   })
