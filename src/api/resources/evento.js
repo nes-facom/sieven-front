@@ -2,11 +2,15 @@ import { apiUsuario } from './utilitario.js'
 
 const eventoResource =
 {
-    cadastrarEvento(params)
+    cadastrarEvento(token, params)
     {
+        const headers = {
+            Authorization: 'Bearer ' + token
+        };
+
         return new Promise( (resolve) =>
         {
-            apiUsuario.post(`/evento/criar-evento`, params).then( (res) =>
+            apiUsuario.post(`/evento/criar-evento`, params, { headers }).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
@@ -30,9 +34,24 @@ const eventoResource =
         })
     },
 
+    listarEventosPaginaInicial()
+    {
+        return new Promise( (resolve) =>
+        {
+            apiUsuario.get(`/eventos-pagina-inicial`, ).then( (res) =>
+            {
+                resolve(res.data)
+            }).catch( () =>
+            {
+
+            })
+        })
+    },
+
     visualizarEventos(eventoId){
         return new Promise( (resolve) =>
         {
+            //console.log(eventoId)
             apiUsuario.get(`/evento/${eventoId}`).then( (res) =>
             {
                 resolve(res.data)
@@ -43,10 +62,14 @@ const eventoResource =
         })
     },
 
-    editarEventos(eventoId , eventoData){
+    editarEventos(token, eventoId , eventoData){
         return new Promise( (resolve, reject) =>
         {
-            apiUsuario.put(`/evento/${eventoId}` , eventoData).then((res) =>
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.put(`/evento/${eventoId}` , eventoData, { headers }).then((res) =>
             {   
                 resolve(res)
             }).catch( (error) =>
@@ -56,15 +79,20 @@ const eventoResource =
         })
     },
 
-    deletarEventos(eventoId) {
+    deletarEventos(token, eventoId) {
         return new Promise((resolve, reject) => {
-          apiUsuario.delete(`/evento/${eventoId}`)
-            .then((res) => {
-              resolve(res);
-            })
-            .catch((error) => {
-              reject(error);
-            });
+
+            const headers = {
+                Authorization: 'Bearer ' + token
+            };
+
+            apiUsuario.delete(`/evento/${eventoId}`, { headers })
+                .then((res) => {
+                resolve(res);
+                })
+                .catch((error) => {
+                reject(error);
+                });
         });
       }
 }

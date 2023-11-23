@@ -1,12 +1,12 @@
 import { apiUsuario } from './utilitario.js'
 
-const tipoResource =
+const modalidadeResource =
 {
-    verificarAdmin(nome)
+    listarModalidades()
     {
         return new Promise( (resolve) =>
         {
-            apiUsuario.get(`/verificar-nome/${nome}`, nome).then( (res) =>
+            apiUsuario.get(`/modalidade`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>
@@ -17,4 +17,4 @@ const tipoResource =
     },
 }
 
-export default tipoResource
+export default modalidadeResource

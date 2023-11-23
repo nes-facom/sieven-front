@@ -35,7 +35,7 @@
       </v-card>
 
 
-      <v-dialog 
+      <v-dialog v-if="$store.getters.isAdmin"
                 v-model="criarEventoDialog"
                 width="700">
         <template v-slot:activator="{ on, attrs }">
@@ -101,7 +101,8 @@ export default {
       this.eventos = apiEventos.listarEventos()
     },
     redirecionarEvento(eventoId) {
-      this.$router.push({ name: 'evento', params: { eventoId: eventoId } })
+      console.log(eventoId)
+      this.$router.push({ name: 'evento', params: { id: eventoId } })
     },
     fecharCriarEventoDialog() {
       this.criarEventoDialog = false
