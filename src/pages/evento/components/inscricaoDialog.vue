@@ -173,7 +173,9 @@ export default {
       const primeiroCaracteres = emailParts[0].substring(0, 4);
       const servidorEmail = emailParts[1];
 
-      return `Não foi possível realizar a inscrição. O CPF informado já está inscrito nessa atividade com o email ${primeiroCaracteres}****@${servidorEmail}.`
+      return `Não foi possível realizar a inscrição. O CPF informado já está inscrito 
+      nessa atividade com o email ${primeiroCaracteres}******@${servidorEmail}.`
+
     },
     fecharCpfCadastrado() {
       this.cpfCadastrado = false;
