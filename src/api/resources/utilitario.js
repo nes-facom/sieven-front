@@ -9,6 +9,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
+            throw err;
         })
     },
     post(url, parameters, config)
@@ -17,6 +18,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
+            throw err;
         })
     },
     put(url, parameters, config)
@@ -25,7 +27,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
-            throw err
+            throw err;
         })
     },
     patch(url, parameters, config)
@@ -34,6 +36,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
+            throw err;
         })
     },
     delete(url, parameters)
@@ -42,6 +45,7 @@ const apiUsuario =
             if (err.response.status == 401) {
                 router.push('/')
             }
+            throw err;
         })
     }
 }

@@ -20,33 +20,36 @@
       </v-row>
       <v-row>
         <v-col cols="12">
-          <label class="label-style" for="desricao">Descrição</label>
+          <label class="label-style" for="descricao">Descrição</label>
           <v-textarea class="campo-style" id="descricao"
                             v-model="evento.descricao"
-                            placeholder="Descrição sobre o evento" 
-                            auto-grow 
-                            :rules="requiredRule('Descrição')"
-                            outlined>
-          </v-textarea>
+                            placeholder="Descrição sobre o evento"
+                            outlined 
+                            :rules="requiredRule('Descrição')"                                                      
+          ></v-textarea>
         </v-col>
       </v-row>
           <v-row>
             <v-col>
-             <v-text-field
+            <label class="label-style" for="dataInicio">Data de Inicio</label>
+            <v-text-field
                 id="dataInicio"
                 v-model="dataInicio"
                 placeholder="Data (DD/MM/AAAA)"
                 outlined
                 v-mask="'##/##/####'"
-                :rules="requiredRule('Data')"
+                :rules="requiredRule('Data de Inicio')"
                 @blur="validateData('dataInicio')"
               ></v-text-field>
             </v-col>
             <v-col>
+              <label class="label-style" for="horaInicio">Hora de Inicio</label>
               <v-text-field
+                id="horaInicio"
                 v-model="horaInicio"
                 placeholder="Hora Inicio"
                 @horaSelecionada="selecaoHora"
+                :rules="requiredRule('Hora de Inicio')"
                 v-mask="'##:##'"
                 outlined
                 @blur="validateHora('horaInicio')"
@@ -55,20 +58,24 @@
           </v-row>
           <v-row>
             <v-col>
+              <label class="label-style" for="dataFim">Data de Fim</label>
               <v-text-field
                 id="dataFim"
                 v-model="dataFim"
                 placeholder="Data (DD/MM/AAAA)"
                 outlined
                 v-mask="'##/##/####'"
-                :rules="requiredRule('Data')"
+                :rules="requiredRule('Data de Fim')"
                 @blur="validateData('dataFim')"
               ></v-text-field>
             </v-col>
             <v-col>
+              <label class="label-style" for="horaFim">Hora de Fim</label>
               <v-text-field
+                id="horaFim"
                 v-model="horaFinal"
                 placeholder="Hora Final"
+                :rules="requiredRule('Hora de Fim')"
                 @horaSelecionada="selecaoHora"
                 v-mask="'##:##'"
                 outlined
@@ -153,7 +160,7 @@ export default {
 
       dataInicio: '',
       dataFim: '',
-
+      descriptionCharacterLimit: 255,
       regrasImagem: [
         value => !value || value.size < 5000000 || 'Máximo de 5Mb em PNG',
       ]
@@ -163,7 +170,7 @@ export default {
     Vue.directive("mask", VueMaskDirective);
   },
   methods: {
-
+   
     validateData(field) {
       const dateRegex = /^\d{2}\/\d{2}\/\d{4}$/;
       console.log(this[field])
@@ -284,4 +291,5 @@ export default {
 .v-file-input .v-icon--link {
   display: none ;
 }
+
 </style>
