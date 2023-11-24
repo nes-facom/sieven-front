@@ -6,11 +6,11 @@
           <v-divider class="mb-2 mt-8"></v-divider>
           <v-row justify="center" align="center" class="mb-2">
             <v-col>
-              <p class="mb-2">{{ nomeDoEvento }}: {{ nomeDaAtividade }}</p>
+              <p class="mb-2">{{ atividade.nome }}: {{ atividade.nome }}</p>
               <v-divider class="mb-2"></v-divider>
-              <p class="mb-2">Data: {{ dataDaAtividade }}</p>
-              <p class="mb-2">Horário: {{ horarioDaAtividade }}</p>
-              <p class="mb-2">Local: {{ localDaAtividade }}</p>
+              <p class="mb-2">Data: {{ atividade.horario_inicio }}</p>
+              <p class="mb-2">Horário: {{ atividade.horario_inicio }}</p>
+              <p class="mb-2">Local: {{ atividade.local }}</p>
             </v-col>
           </v-row>
         </v-col>
@@ -48,6 +48,7 @@
 <script>
 import { QrcodeStream } from 'vue-qrcode-reader/src'
 import apiInscricao from '@/api/resources/inscricao.js'
+import apiAtividade from '@/api/resources/atividade.js'
 import middleware from '@/middleware/localStorage.js'
 
 export default {
@@ -55,12 +56,7 @@ export default {
   components: { QrcodeStream },
   data() {
     return {
-      nomeDoEvento: "Meu Evento",
-      nomeDaAtividade: "Minha Atividade",
-      dataDaAtividade: "01/01/2023",
-      horarioDaAtividade: "14:00 - 16:00",
-      localDaAtividade: "Local X",
-      valor: null,
+      atividade: '',
       snackbar: {
         success: false,
         error: false,
@@ -113,7 +109,15 @@ export default {
       } finally {
         // Usar para remover o loader
       }
+    },
+    carregaAtividade(atividadeId) {
+      apiAtividade.visualizarAtividades(atividadeId).then((res) => {
+        this.atividade = res
+      })
     }
+  },
+  mounted() {
+    this.carregaAtividade(this.$route.params.id)
   }
 };
 </script>

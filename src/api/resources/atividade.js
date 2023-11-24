@@ -55,7 +55,7 @@ const atividadeResource =
     visualizarAtividades(atividadeId){
         return new Promise( (resolve) =>
         {
-            apiUsuario.get(`/atividade/${atividadeId}`).then( (res) =>
+            apiUsuario.get(`/atividade/${atividadeId}/checkin`).then( (res) =>
             {
                 resolve(res.data)
             }).catch( () =>

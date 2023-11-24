@@ -143,6 +143,9 @@ export default {
   props: {
     dialog: Boolean,
     atividade: Object,
+    id: {
+      required: true
+    },
   },
   data() {
     return {
@@ -218,10 +221,10 @@ export default {
       this.$emit("fecharInscricaoDialog");
     },
     realizarInscricao() {
-
+      console.log(this.id)
       if (this.$refs.form.validate()) {
         const inscricao = {
-          atividade_id: this.$route.params.id,
+          atividade_id: this.id,
           nome: this.inscricao.nome,
           cpf: this.inscricao.cpf,
           email: this.inscricao.email,
@@ -237,14 +240,11 @@ export default {
             }
             
           }).catch((err)=> {
+            console.log(inscricao.atividade_id)
             console.log(err)
-            this.cpfCadastrado =  true;
-           
-      })
-
-          }
-
-          
+            this.cpfCadastrado =  true;    
+        })
+      }       
       },
     formatarHora(hora) {
       const data = new Date(hora);
