@@ -12,7 +12,7 @@
             <v-col class="d-flex" cols="12" md="2"> 
               <barra-lateral></barra-lateral>
             </v-col>
-            <v-col class="d-flex" cols="12" md="1">
+            <v-col class="d-flex" cols="12" md="10">
               <v-main>
                 <router-view></router-view>
               </v-main>

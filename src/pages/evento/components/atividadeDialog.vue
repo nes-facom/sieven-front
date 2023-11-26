@@ -45,7 +45,7 @@
           </v-btn>
         </v-row>
         </template>
-        <inscricaoDialog :dialog="inscricaoDialog" :atividade="atividade" @fecharInscricaoDialog="fecharInscricaoDialog"></inscricaoDialog>
+        <inscricaoDialog :id=id :dialog="inscricaoDialog" :atividade="atividade" @fecharInscricaoDialog="fecharInscricaoDialog"></inscricaoDialog>
       </v-dialog>
     </v-card>
   </div>
