@@ -5,7 +5,6 @@ const apiSieven = axios.create({
   timeout: 100000,
   headers: {
     "Content-Type": "application/json",
-    "Access-Control-Allow-Origin": "*",
   },
 });
 
